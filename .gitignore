@@ -35,4 +35,4 @@ vignettes/*.pdf
 # self added
 desktop.ini
 globalterrorismdb_0616dist.csv
-
+API.R
