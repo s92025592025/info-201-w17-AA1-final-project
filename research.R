@@ -3,6 +3,7 @@ library(plotly)
 library(ggplot2)
 library(maps)
 library(countrycode)
+library(tidyr)
 
 source('./API.R')
 DATA <- read.csv('./data/globalterrorismdb_0616dist.csv', stringsAsFactors = FALSE)
@@ -71,3 +72,15 @@ ggplot(data = left_join(world.map, attack.per.10, by = c('ISO3' = 'New.ISO3'))) 
           axis.ticks=element_blank(),
           axis.title.x=element_blank(),
           axis.title.y=element_blank())
+
+
+# show the distribution of weapons from 1970 to 2015
+weapons <- DATA %>%
+		   gather(key = from, value = weap.type,
+		   		  weaptype1_txt, weaptype2_txt,
+				  weaptype3_txt, weaptype4_txt) %>%
+		   filter(weap.type != ".", weap.type != "Unknown")
+
+
+ggplot(data = weapons) + 
+	geom_bar(mapping = aes(x = weap.type), stat = "count")
