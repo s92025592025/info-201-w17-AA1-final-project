@@ -39,9 +39,10 @@ world.map <- map_data('world2') %>%
 			 mutate(ISO3 = iso.alpha(region, n = 3))
 
 # sort country data first
-country.data <- attack.per.country %>%
-				mutate(ISO3 = countrycode(country_txt, 'country.name', 'iso3c')) %>%
-				select(country_txt, ISO3)
+#country.data <- attack.per.country %>%
+#				mutate(ISO3 = countrycode(country_txt, 'country.name', 'iso3c')) %>%
+#				select(country_txt, ISO3) %>%
+#				mutate(`New ISO3` = iso.alpha(country_txt, n = 3))
 
 
-write.csv(country.data, './data/country_data.csv')
+#write.csv(country.data, './data/country_data.csv')
