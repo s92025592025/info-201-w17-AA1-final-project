@@ -48,3 +48,26 @@ ggplot(data = left_join(world.map, attack.per.country, by = c('ISO3' = 'New.ISO3
           axis.ticks=element_blank(),
           axis.title.x=element_blank(),
           axis.title.y=element_blank())
+
+# this will show attack total every 10 year
+
+attack.per.10 <- DATA %>%
+				 mutate(year.group = floor((iyear - 1970) / 10)) %>%
+				 mutate(year.group.label = paste(year.group * 10 + 1970, '~',
+                                          ifelse(year.group * 10 + 1980 > 2015, 2015,
+                                                 year.group * 10 + 1980))) %>%
+				 group_by(country_txt, year.group.label) %>%
+				 summarise(attack.times = n()) %>%
+				 left_join(ISO3.CODE)
+
+ggplot(data = left_join(world.map, attack.per.10, by = c('ISO3' = 'New.ISO3'))) +
+	geom_polygon(mapping = aes(x = long, y = lat, group = group,
+							   fill = attack.times)) +
+	facet_grid(year.group.label ~ .) + 
+	coord_quickmap() + 
+	labs(title = "Tatal Attacks in every 10 years from 1970 to 2015") + 
+	theme(axis.text.x=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank())
