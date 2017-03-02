@@ -5,9 +5,8 @@ library(maps)
 library(countrycode)
 
 source('./API.R')
-DATA <- read.csv('./data/globalterrorismdb_0616dist.csv', stringsAsFactors = TRUE)
-Sys.setenv("plotly_username" = "s92025592025")
-Sys.setenv("plotly_api_key" = plotly.key)
+DATA <- read.csv('./data/globalterrorismdb_0616dist.csv', stringsAsFactors = FALSE)
+ISO3.CODE <- read.csv('./data/country_data.csv', stringsAsFactors = FALSE)
 
 
 # This block will try to find out the terrorist attact per year
@@ -38,11 +37,14 @@ write.csv(attack.per.country, './data/attack_per_country.csv')
 world.map <- map_data('world2') %>%
 			 mutate(ISO3 = iso.alpha(region, n = 3))
 
-# sort country data first
-#country.data <- attack.per.country %>%
-#				mutate(ISO3 = countrycode(country_txt, 'country.name', 'iso3c')) %>%
-#				select(country_txt, ISO3) %>%
-#				mutate(`New ISO3` = iso.alpha(country_txt, n = 3))
+attack.per.country <- left_join(attack.per.country, ISO3.CODE)
 
-
-#write.csv(country.data, './data/country_data.csv')
+ggplot(data = left_join(world.map, attack.per.country, by = c('ISO3' = 'New.ISO3'))) +
+	geom_polygon(mapping = aes(x = long, y = lat, group = group,
+							   fill = `Attacked Times`)) + 
+	labs(title = 'Total Attacked Times From 1970 to 2015') +
+	theme(axis.text.x=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank())
