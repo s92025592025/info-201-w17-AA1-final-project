@@ -36,3 +36,4 @@ vignettes/*.pdf
 desktop.ini
 globalterrorismdb_0616dist.csv
 API.R
+test*.R
