@@ -84,3 +84,19 @@ weapons <- DATA %>%
 
 ggplot(data = weapons) + 
 	geom_bar(mapping = aes(x = weap.type), stat = "count")
+
+# this shows the attack group
+groups <- DATA %>%
+		  group_by(gname) %>%
+		  summarise(times = n())
+
+write.csv(groups, './data/groups.csv')
+
+
+# motive list
+motive <- DATA %>%
+		  group_by(motive) %>%
+		  summarise(times = n())
+
+write.csv(motive, './data/motive.csv')
+
