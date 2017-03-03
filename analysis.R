@@ -14,34 +14,27 @@ DATA <- read.csv('./data/globalterrorismdb_0616dist.csv', stringsAsFactors = FAL
 ISO3.CONVERT <- read.csv('./data/country_data.csv', stringsAsFactors = FALSE)
 DATA.w.ISO3 <- left_join(DATA, ISO3.CONVERT)
 
-# pre: should pass as ISO3(current) string(ALL CAPS) or 'WORLD' to country, a vector of a starting year
+# pre: should pass as ISO3(current) string(ALL CAPS) or 'WORLD' to country.iso3, a vector of a starting year
 #	   and ending year(numbers) to year.range, and a list of filters to selected.
 #	   Format for filter: ['col.name'='attribute to filter']
 #	   Example for filter: [attacktype1_txt='Assassination', targtype1_txt='Private Citizens & Property']
 #
 # post: Will return a list of plotly pie charts indicating Attacks Type, Targets,
 #		and Used Weapons
-Attack.Info.Pies <- function(country, year.range, selected){
+Attack.Info.Pies <- function(country.iso3, year.range, selected){
 	# Filters out the data within the year.range
-	filtered <- DATA %>%
+	filtered <- DATA.w.ISO3 %>%
 				filter(iyear >= year.range[1], iyear <= year.range[2])
 
 	# filter out the selected country if needed
-	if(country != 'WORLD'){
+	if(country.iso3 != 'WORLD'){
 		filtered <- filtered %>%
-					filter(country_txt == country)
+					filter(New.ISO3 == country.iso3)
 	}
-
-	print(2)
-	print(filtered)
 
 	# filter out the selected data
 	for(key in names(selected)){
 		filtered <- filtered %>%
-					filter_(key == selected[key])
+					filter_(paste0(key, '=="' ,selected[key], '"'))
 	}
-
-	write.csv(filtered, './data/testing.csv')
 }
-
-Attack.Info.Pies("United States", c(2015, 2015), list())
