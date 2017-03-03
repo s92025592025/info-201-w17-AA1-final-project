@@ -38,3 +38,8 @@ Attack.Info.Pies <- function(country.iso3, year.range, selected){
 					filter_(paste0(key, '=="' ,selected[key], '"'))
 	}
 }
+
+# pre: should give data a filtered data
+# post: will return a plotly contains a pie chart showing the ratio of each kind of
+#		attack
+Attack.Type.Pie <- function(data){}
