@@ -10,6 +10,11 @@ library(maps)
 library(stringr)
 library(plotly)
 
+source('./API.R')
+
+Sys.setenv("plotly_username"="s92025592025")
+Sys.setenv("plotly_api_key"=plotly.key)
+
 DATA <- read.csv('./data/globalterrorismdb_0616dist.csv', stringsAsFactors = FALSE)
 ISO3.CONVERT <- read.csv('./data/country_data.csv', stringsAsFactors = FALSE)
 DATA.w.ISO3 <- left_join(DATA, ISO3.CONVERT)
@@ -37,9 +42,26 @@ Attack.Info.Pies <- function(country.iso3, year.range, selected){
 		filtered <- filtered %>%
 					filter_(paste0(key, '=="' ,selected[key], '"'))
 	}
+
+	Attack.Type.Pie(filtered)
+
 }
 
 # pre: should give data a filtered data
 # post: will return a plotly contains a pie chart showing the ratio of each kind of
 #		attack
-Attack.Type.Pie <- function(data){}
+Attack.Type.Pie <- function(data){
+	gathered <- data %>%
+				gather(key = num, value = type,
+					   attacktype1_txt, attacktype2_txt, attacktype3_txt) %>%
+				group_by(type) %>%
+				summarise(time = n()) %>%
+				filter(type != '.')
+
+	p <- plot_ly(gathered, labels = ~type, values = ~time, type = 'pie') %>%
+		 layout(title = "Attack Types",
+		 		xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         		yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+
+	return(p)
+}
