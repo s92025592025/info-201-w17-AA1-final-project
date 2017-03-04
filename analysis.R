@@ -43,7 +43,8 @@ Attack.Info.Pies <- function(country.iso3, year.range, selected){
 					filter_(paste0(key, '=="' ,selected[key], '"'))
 	}
 
-	Attack.Type.Pie(filtered)
+	print(plotly_POST(Attack.Type.Pie(filtered), filename = 'type.pie'))
+	print(plotly_POST(Attack.Target.Pie(filtered), filename = 'target.pie'))
 
 }
 
@@ -58,10 +59,27 @@ Attack.Type.Pie <- function(data){
 				summarise(time = n()) %>%
 				filter(type != '.')
 
-	p <- plot_ly(gathered, labels = ~type, values = ~time, type = 'pie') %>%
-		 layout(title = "Attack Types",
-		 		xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-         		yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
-
-	return(p)
+	return(plot_ly(gathered, labels = ~type, values = ~time, type = 'pie') %>%
+		   layout(title = "Attack Types",
+		 		  xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         		  yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
 }
+
+# pre: should give data a filtered data
+# post: will return a plotly pie chart showing the ratio of each kind of attack targets
+Attack.Target.Pie <- function(data){
+	gathered <- data %>%
+				gather(key = num, value = type,
+					   targtype1_txt, targtype2_txt, targtype3_txt) %>%
+				group_by(type) %>%
+				summarise(time = n()) %>%
+				filter(type != '.')
+
+	return(plot_ly(gathered, labels = ~type, values = ~time, type = 'pie') %>%
+		   layout(title = "Attack Targets",
+		 		  xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         		  yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
+
+}
+
+Attack.Info.Pies('USA', c(1970, 2015), list())
