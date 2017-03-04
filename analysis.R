@@ -82,4 +82,10 @@ Attack.Target.Pie <- function(data){
 
 }
 
+
+# pre: should give data a filtered data
+# post: will return a plotly pie chart showing the ratio od each kind of Weapons used
+#		in attacks
+Attack.Weap.Pie <- function(data){}
+
 Attack.Info.Pies('USA', c(1970, 2015), list())
