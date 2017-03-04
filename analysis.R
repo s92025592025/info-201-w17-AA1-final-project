@@ -60,7 +60,9 @@ Attack.Type.Pie <- function(data){
 				summarise(time = n()) %>%
 				filter(type != '.')
 
-	return(plot_ly(gathered, labels = ~type, values = ~time, type = 'pie') %>%
+	return(plot_ly(gathered, labels = ~type, values = ~time, type = 'pie',
+				   textposition = 'inside', textinfo = 'label+percent',
+			       showlegend = FALSE) %>%
 		   layout(title = "Attack Types",
 		 		  xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          		  yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
@@ -76,7 +78,9 @@ Attack.Target.Pie <- function(data){
 				summarise(time = n()) %>%
 				filter(type != '.')
 
-	return(plot_ly(gathered, labels = ~type, values = ~time, type = 'pie') %>%
+	return(plot_ly(gathered, labels = ~type, values = ~time, type = 'pie',
+				   textposition = 'inside', textinfo = 'label+percent',
+			       showlegend = FALSE) %>%
 		   layout(title = "Attack Targets",
 		 		  xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          		  yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
@@ -95,7 +99,9 @@ Attack.Weap.Pie <- function(data){
 				summarise(time = n()) %>%
 				filter(type != '.')
 
-	return(plot_ly(gathered, labels = ~type, values = ~time, type = 'pie') %>%
+	return(plot_ly(gathered, labels = ~type, values = ~time, type = 'pie',
+				   textposition = 'inside', textinfo = 'label+percent',
+			       showlegend = FALSE) %>%
 		   layout(title = "Attack Weapons",
 		 		  xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          		  yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
