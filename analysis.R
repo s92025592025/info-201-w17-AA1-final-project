@@ -48,6 +48,8 @@ Attack.Info.Pies <- function(country.iso3, year.range, selected){
 	#print(plotly_POST(Attack.Target.Pie(filtered), filename = 'target.pie'))
 	#print(plotly_POST(Attack.Weap.Pie(filtered)), filename = 'weap.pie')
 
+	return(list(type = Attack.Type.Pie(filtered), targets = Attack.Target.Pie(filtered),
+				weap = Attack.Weap.Pie(filtered)))
 }
 
 # pre: should give data a filtered data
@@ -109,4 +111,4 @@ Attack.Weap.Pie <- function(data){
 }
 
 # testing line
-# Attack.Info.Pies('USA', c(1970, 2015), list())
+#Attack.Info.Pies('USA', c(1970, 2015), list())
