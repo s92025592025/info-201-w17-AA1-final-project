@@ -43,9 +43,10 @@ Attack.Info.Pies <- function(country.iso3, year.range, selected){
 					filter_(paste0(key, '=="' ,selected[key], '"'))
 	}
 
-	print(plotly_POST(Attack.Type.Pie(filtered), filename = 'type.pie'))
-	print(plotly_POST(Attack.Target.Pie(filtered), filename = 'target.pie'))
-	print(plotly_POST(Attack.Weap.Pie(filtered)), filename = 'weap.pie')
+	# testing lines
+	#print(plotly_POST(Attack.Type.Pie(filtered), filename = 'type.pie'))
+	#print(plotly_POST(Attack.Target.Pie(filtered), filename = 'target.pie'))
+	#print(plotly_POST(Attack.Weap.Pie(filtered)), filename = 'weap.pie')
 
 }
 
@@ -107,4 +108,5 @@ Attack.Weap.Pie <- function(data){
          		  yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
 }
 
-Attack.Info.Pies('USA', c(1970, 2015), list())
+# testing line
+# Attack.Info.Pies('USA', c(1970, 2015), list())
