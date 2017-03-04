@@ -45,6 +45,7 @@ Attack.Info.Pies <- function(country.iso3, year.range, selected){
 
 	print(plotly_POST(Attack.Type.Pie(filtered), filename = 'type.pie'))
 	print(plotly_POST(Attack.Target.Pie(filtered), filename = 'target.pie'))
+	print(plotly_POST(Attack.Weap.Pie(filtered)), filename = 'weap.pie')
 
 }
 
@@ -86,6 +87,18 @@ Attack.Target.Pie <- function(data){
 # pre: should give data a filtered data
 # post: will return a plotly pie chart showing the ratio od each kind of Weapons used
 #		in attacks
-Attack.Weap.Pie <- function(data){}
+Attack.Weap.Pie <- function(data){
+	gathered <- data %>%
+				gather(key = num, value = type,
+					   weaptype1_txt, weaptype2_txt, weaptype3_txt, weaptype4_txt) %>%
+				group_by(type) %>%
+				summarise(time = n()) %>%
+				filter(type != '.')
+
+	return(plot_ly(gathered, labels = ~type, values = ~time, type = 'pie') %>%
+		   layout(title = "Attack Weapons",
+		 		  xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+         		  yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
+}
 
 Attack.Info.Pies('USA', c(1970, 2015), list())
