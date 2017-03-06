@@ -6,9 +6,9 @@ source("analysis.R")
 ui <- fluidPage(
   textInput('iso3', 'ISO3', value = "AFG"),
   fluidRow(
-    plotlyOutput("type.pie"),
-    plotlyOutput("target.pie"),
-    plotlyOutput("weap.pie")
+    column(width = 4, plotlyOutput("type.pie")),
+    column(width = 4, plotlyOutput("target.pie")),
+    column(width = 4, plotlyOutput("weap.pie"))
   ),
   verbatimTextOutput("click")
 )
