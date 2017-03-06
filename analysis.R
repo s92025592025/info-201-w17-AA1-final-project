@@ -10,7 +10,7 @@ library(stringr)
 library(plotly)
 library(scales)
 
-DATA <- read.csv('./data/globalterrorismdb_0616dist.csv', stringsAsFactors = FALSE)
+DATA <- read.csv('./data/2015only.csv', stringsAsFactors = FALSE)
 ISO3.CONVERT <- read.csv('./data/country_data.csv', stringsAsFactors = FALSE)
 DATA.w.ISO3 <- left_join(DATA, ISO3.CONVERT)
 
@@ -25,8 +25,6 @@ pies <- Attack.Info.Pies('AFG', c(2015,2015),c())
 #		and Used Weapons
 Attack.Info.Pies <- function(country.iso3, year.range, selected){
 	# Filters out the data within the year.range
-  print(year.range[1])
-  print(year.range[2])
 	filtered <- DATA.w.ISO3 %>%
 				filter(iyear >= year.range[1], iyear <= year.range[2])
 
