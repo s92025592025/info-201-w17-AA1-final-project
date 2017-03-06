@@ -2,7 +2,6 @@
 # Info 201 AA1
 # 2017/03/02
 # This is a file contains functions to generate plots to show on a pages
-
 library(dplyr)
 library(ggplot2)
 library(tidyr)
@@ -15,6 +14,8 @@ DATA <- read.csv('./data/globalterrorismdb_0616dist.csv', stringsAsFactors = FAL
 ISO3.CONVERT <- read.csv('./data/country_data.csv', stringsAsFactors = FALSE)
 DATA.w.ISO3 <- left_join(DATA, ISO3.CONVERT)
 
+pies <- Attack.Info.Pies('AFG', c(2015,2015),c())
+
 # pre: should pass as ISO3(current) string(ALL CAPS) or 'WORLD' to country.iso3, a vector of a starting year
 #	   and ending year(numbers) to year.range, and a list of filters to selected.
 #	   Format for filter: ['col.name'='attribute to filter']
@@ -24,6 +25,8 @@ DATA.w.ISO3 <- left_join(DATA, ISO3.CONVERT)
 #		and Used Weapons
 Attack.Info.Pies <- function(country.iso3, year.range, selected){
 	# Filters out the data within the year.range
+  print(year.range[1])
+  print(year.range[2])
 	filtered <- DATA.w.ISO3 %>%
 				filter(iyear >= year.range[1], iyear <= year.range[2])
 
