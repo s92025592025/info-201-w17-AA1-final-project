@@ -9,11 +9,7 @@ library(tidyr)
 library(maps)
 library(stringr)
 library(plotly)
-
-source('./API.R')
-
-Sys.setenv("plotly_username"="s92025592025")
-Sys.setenv("plotly_api_key"=plotly.key)
+library(scales)
 
 DATA <- read.csv('./data/globalterrorismdb_0616dist.csv', stringsAsFactors = FALSE)
 ISO3.CONVERT <- read.csv('./data/country_data.csv', stringsAsFactors = FALSE)
@@ -42,11 +38,6 @@ Attack.Info.Pies <- function(country.iso3, year.range, selected){
 		filtered <- filtered %>%
 					filter_(paste0(key, '=="' ,selected[key], '"'))
 	}
-
-	# testing lines
-	#print(plotly_POST(Attack.Type.Pie(filtered), filename = 'type.pie'))
-	#print(plotly_POST(Attack.Target.Pie(filtered), filename = 'target.pie'))
-	#print(plotly_POST(Attack.Weap.Pie(filtered)), filename = 'weap.pie')
 
 	return(list(type = Attack.Type.Pie(filtered), targets = Attack.Target.Pie(filtered),
 				weap = Attack.Weap.Pie(filtered)))
@@ -110,5 +101,33 @@ Attack.Weap.Pie <- function(data){
          		  yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
 }
 
-# testing line
-#Attack.Info.Pies('USA', c(1970, 2015), list())
+
+Global.Terrorism.Attacks <- function(year) {
+	world <- map_data("world")
+	world <- mutate(world, ISO3 = iso.alpha(region, 3))
+
+	attack.country.year <- DATA.w.ISO3 %>%
+	                       group_by(country_txt, ISO3, iyear) %>%
+	                       summarize(Attacks = n()) %>% 
+	                       select(Country = country_txt, ISO3, Year = iyear, Attacks)
+
+	attacks <- filter(attack.country.year, Year == '2015') %>% select(Attacks) %>% arrange(Attacks)
+
+	p <- attack.country.year %>%
+	  	 filter(Year == '2015') %>%  #Replace with ui.r variable
+	  	 right_join(world, by = 'ISO3') %>% 
+	  	 ggplot() +
+	     geom_polygon(aes(x = long, y = lat, group = group, text = sprintf("Country: %s<br>Attacks: %s", Country, Attacks), fill = ifelse(is.na(Attacks), 0, Attacks))) +
+	     scale_fill_gradientn(colors = c('green3', 'yellow', 'red'), values = rescale(attacks$Attacks), name = "Attacks") +
+	     ggtitle(paste("Global Terrorism Attacks", year)) +
+	     theme(axis.title.x=element_blank(),
+	     	   axis.text.x=element_blank(),
+	      	   axis.ticks.x=element_blank()) +
+	     theme(axis.title.y=element_blank(),
+	     	   axis.text.y=element_blank(),
+	      	   axis.ticks.y=element_blank()) +
+	     coord_quickmap()
+
+	return(ggplotly(p, tooltip = "text"))
+
+}
