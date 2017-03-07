@@ -7,10 +7,12 @@ library(plotly)
 library(scales)
 
 
-server <- function(input, output) {
-  
+source("analysis.R")
 
-  output$graph <- renderLeaflet({
+server <- function(input, output) {
+
+# Passes the input recieved from the ui to a function to get the plot.
+  output$graph <- renderPlotly({
     return(Global.Terrorism.Attacks(input$slider))
   })
 }
