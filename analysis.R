@@ -14,8 +14,6 @@ DATA <- read.csv('./data/2015only.csv', stringsAsFactors = FALSE)
 ISO3.CONVERT <- read.csv('./data/country_data.csv', stringsAsFactors = FALSE)
 DATA.w.ISO3 <- left_join(DATA, ISO3.CONVERT)
 
-pies <- Attack.Info.Pies('AFG', c(2015,2015),c())
-
 # pre: should pass as ISO3(current) string(ALL CAPS) or 'WORLD' to country.iso3, a vector of a starting year
 #	   and ending year(numbers) to year.range, and a list of filters to selected.
 #	   Format for filter: ['col.name'='attribute to filter']

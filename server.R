@@ -5,7 +5,7 @@ library(plotly)
 source("analysis.R")
 server <- function(input, output) {
   pies <- reactive({
-    d <- event_data("type_click")
+    #d <- event_data("type_click")
     Attack.Info.Pies(input$iso3, c(2015,2015), c())
   })
   
