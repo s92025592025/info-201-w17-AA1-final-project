@@ -103,6 +103,7 @@ Attack.Weap.Pie <- function(data){
 }
 
 
+
 Global.Terrorism.Attacks <- function(year) {
 	world <- map_data("world")
 	world <- mutate(world, ISO3 = iso.alpha(region, 3))
