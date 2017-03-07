@@ -6,7 +6,7 @@ source("analysis.R")
 ui <- fluidPage(
   fluidRow(
   column(width =  4, textInput('iso3', 'ISO3', value = "AFG")),
-  column(width = 4, )
+  column(width = 4, sliderInput("year", "Year range:", min = 1970, max = 2015, value = c(1970,2015)))
   ),
   fluidRow(
     column(width = 4, selectInput("type.select", 'Select Attack Type', choices = c())),
