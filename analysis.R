@@ -55,7 +55,8 @@ Attack.Type.Pie <- function(data){
 
 	return(plot_ly(gathered, labels = ~type, values = ~time, type = 'pie',
 				   textposition = 'inside', textinfo = 'label+percent',
-			       showlegend = FALSE) %>%
+			       showlegend = FALSE, 
+			       source = 'select') %>%
 		   layout(title = "Attack Types",
 		 		  xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          		  yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
