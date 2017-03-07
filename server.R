@@ -12,8 +12,9 @@ server <- function(input, output, clientData, session) {
   # This is a reactive varaible that finds a new set of pie info when input parameters are changed
   pies <- reactive({
     select <- select()
-    print(select)
-    Attack.Info.Pies(input$iso3, c(2015,2015), select)
+    year <- year()
+    print(year)
+    Attack.Info.Pies(input$iso3, year, select)
   })
   
   select <- reactive({
@@ -27,8 +28,15 @@ server <- function(input, output, clientData, session) {
     select
   })
   
+  year <- reactive({
+    year <- input$year
+    year
+  })
+  
   lists <- reactive({
-    Attack.Info.List(input$iso3, c(2015,2015), select())
+    select <- select()
+    year <- year()
+    Attack.Info.List(input$iso3, year, select)
   })
  
   # The three pie charts to disply attack information
