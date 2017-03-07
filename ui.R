@@ -5,8 +5,7 @@ library(plotly)
 source("analysis.R")
 ui <- fluidPage(
   fluidRow(
-  column(width =  4, textInput('iso3', 'ISO3', value = "AFG")),
-  column(width = 4, )
+  column(width =  4, textInput('iso3', 'ISO3', value = "AFG"))
   ),
   fluidRow(
     column(width = 4, selectInput("type.select", 'Select Attack Type', choices = c())),
