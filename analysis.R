@@ -159,14 +159,14 @@ Pie.Data.Filter <- function(country.iso3, year.range, selected){
 	# filter out the selected data
 	for(key in names(selected)){
 		filtered <- filtered %>%
-					filter_(paste0('"', key, '1_txt"=="' ,selected[key], '"'))
+					filter_(paste0(key, '1_txt=="' ,selected[key], '"'))
 	}
-
+	#write.csv(filtered, 'testing.csv')
 	return(filtered)
 }
 
-Attack.Info.List("USA", c(2015, 2015), list())
-Attack.Info.Pies("USA", c(2015, 2015), list())
+Attack.Info.List("USA", c(2015, 2015), list('targtype'='Business'))
+Attack.Info.Pies("USA", c(2015, 2015), list('targtype'='Business'))
 
 Global.Terrorism.Attacks <- function(year) {
 	world <- map_data("world")
