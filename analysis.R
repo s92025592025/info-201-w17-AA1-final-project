@@ -109,7 +109,7 @@ Attack.Type.List <- function(data){
 				summarise(time = n()) %>%
 				filter(type != '.')
 
-	return(gathered[['type']])
+	return(c('ALL', gathered[['type']]))
 }
 
 
@@ -123,7 +123,7 @@ Attack.Target.List <- function(data){
 				summarise(time = n()) %>%
 				filter(type != '.')
 
-	return(gathered[['type']])
+	return(c('ALL', gathered[['type']]))
 }
 
 # pre: should give data a filtered data
@@ -136,7 +136,7 @@ Attack.Weap.List <- function(data){
 				summarise(time = n()) %>%
 				filter(type != '.')
 
-	return(gathered[['type']])
+	return(c('ALL', gathered[['type']]))
 }
 
 # pre: should pass as ISO3(current) string(ALL CAPS) or 'WORLD' to country.iso3, a vector of a starting year
