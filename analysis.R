@@ -159,9 +159,9 @@ Pie.Data.Filter <- function(country.iso3, year.range, selected){
 	# filter out the selected data
 	for(key in names(selected)){
 		filtered <- filtered %>%
-					filter_(paste0(key, '1_txt=="' ,selected[key], '"') || 
-							paste0(key, '2_txt=="' ,selected[key], '"') ||
-							paste0(key, '3_txt=="' ,selected[key], '"'))
+					filter_(paste(paste0(key, '1_txt=="' ,selected[key], '"'), '||' 
+								  paste0(key, '2_txt=="' ,selected[key], '"'), '||'
+								  paste0(key, '3_txt=="' ,selected[key], '"')))
 	}
 
 	return(filtered)
