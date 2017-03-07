@@ -101,20 +101,7 @@ Attack.Weap.Pie <- function(data){
          		  yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
 }
 
-# pre: should pass in a list of filter to filter, and a vector of a starting year
-#	   and ending year(numbers) to year.range
-# post: will return a vector of attack types that under the filter
-Attack.Type.List <- function(filter, year.range){}
 
-# pre: should pass in a list of filter to filter, and a vector of a starting year
-#	   and ending year(numbers) to year.range
-# post: will return a vector of attack Targets that under the filter
-Attack.Target.List <- function(filter, year.range){}
-
-# pre: should pass in a list of filter to filter, and a vector of a starting year
-#	   and ending year(numbers) to year.range
-# post: will return a vector of attack Weapons that under the filter
-Attack.Weap.List <- function(filter, year.range){}
 
 Global.Terrorism.Attacks <- function(year) {
 	world <- map_data("world")
