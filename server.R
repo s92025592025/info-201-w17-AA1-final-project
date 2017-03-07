@@ -11,12 +11,19 @@ server <- function(input, output, clientData, session) {
   
   # This is a reactive varaible that finds a new set of pie info when input parameters are changed
   pies <- reactive({
-    d <- event_data("plotly_click")
-    Attack.Info.Pies(input$iso3, c(2015,2015), c())
+    Attack.Info.Pies(input$iso3, c(2015,2015), lists())
   })
   
   lists <- reactive({
-    Attack.Info.List(input$iso3, c(2015,2015), c()) 
+    type <- input$type.select
+    print(type)
+    target <- input$target.select
+    weap <- input$weap.select
+    select = list()
+    if(type != 'ALL') select <- c(select, 'attacktype' = type)
+    if(target != 'ALL') select <- c(select, 'targettype' = target)
+    if(weap != 'ALL') select <- c(select, 'weaptype' = weap)
+    Attack.Info.List(input$iso3, c(2015,2015), select) 
   })
  
   # The three pie charts to disply attack information
@@ -31,10 +38,22 @@ server <- function(input, output, clientData, session) {
   })
   
   observe({ # Listen to when the to-be-included attributes are changed
-    lists <- lists()
+    lists <- Attack.Info.List(input$iso3, c(2015,2015), c())
     updateSelectInput(session, 'type.select', choices = lists[['type']]) # Change the attribute choices for plot's x-axis
-    updateSelectInput(session, 'info.select', choices = lists[['target']]) # Change the attribute choices for plot's y-axis
+    updateSelectInput(session, 'target.select', choices = lists[['target']]) # Change the attribute choices for plot's y-axis
     updateSelectInput(session, 'weap.select', choices = lists[['weap']]) # Change the attribute choices for table's sorting method
+  })
+  
+  observe({
+    type <- input$type.select
+    print(type)
+    target <- input$target.select
+    weap <- input$weap.select
+    select = list()
+    if(type != 'ALL') select <- c(select, 'attacktype' = type)
+    if(target != 'ALL') select <- c(select, 'targettype' = target)
+    if(weap != 'ALL') select <- c(select, 'weaptype' = weap)
+    Attack.Info.List(input$iso3, c(2015,2015), select) 
   })
   
 }

@@ -6,9 +6,9 @@ source("analysis.R")
 ui <- fluidPage(
   textInput('iso3', 'ISO3', value = "AFG"),
   fluidRow(
-    column(width = 4, selectInput("type.selec", 'Select Attack Type', choices = c(''))),
-    column(width = 4, selectInput("target.selec",'Select Target Type', choices = c(''))),
-    column(width = 4, selectInput("weap.selec", 'Select Weapon Type',choices = c('')))
+    column(width = 4, selectInput("type.select", 'Select Attack Type', choices = c(''))),
+    column(width = 4, selectInput("target.select",'Select Target Type', choices = c(''))),
+    column(width = 4, selectInput("weap.select", 'Select Weapon Type',choices = c('')))
   ),
   fluidRow(
     column(width = 4, plotlyOutput("type.pie")),
