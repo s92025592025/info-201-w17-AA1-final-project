@@ -53,7 +53,7 @@ Attack.Type.Pie <- function(data){
 Attack.Target.Pie <- function(data){
 	gathered <- data %>%
 				gather(key = num, value = type,
-					   targtype1_txt) %>% #, targtype2_txt, targtype3_txt) %>%
+					   targtype1_txt, targtype2_txt, targtype3_txt) %>%
 				group_by(type) %>%
 				summarise(time = n()) %>%
 				filter(type != '.')
@@ -73,7 +73,7 @@ Attack.Target.Pie <- function(data){
 Attack.Weap.Pie <- function(data){
 	gathered <- data %>%
 				gather(key = num, value = type,
-					   weaptype1_txt) %>% #, weaptype2_txt, weaptype3_txt, weaptype4_txt) %>%
+					   weaptype1_txt, weaptype2_txt, weaptype3_txt, weaptype4_txt) %>%
 				group_by(type) %>%
 				summarise(time = n()) %>%
 				filter(type != '.')
@@ -104,7 +104,7 @@ Attack.Info.List <- function(country.iso3, year.range, selected){
 Attack.Type.List <- function(data){
 	gathered <- data %>%
 				gather(key = num, value = type,
-					   attacktype1_txt) %>% #, attacktype2_txt, attacktype3_txt) %>%
+					   attacktype1_txt, attacktype2_txt, attacktype3_txt) %>%
 				group_by(type) %>%
 				summarise(time = n()) %>%
 				filter(type != '.')
@@ -118,7 +118,7 @@ Attack.Type.List <- function(data){
 Attack.Target.List <- function(data){
 	gathered <- data %>%
 				gather(key = num, value = type,
-					   targtype1_txt) %>% #, targtype2_txt, targtype3_txt) %>%
+					   targtype1_txt, targtype2_txt, targtype3_txt) %>%
 				group_by(type) %>%
 				summarise(time = n()) %>%
 				filter(type != '.')
@@ -131,7 +131,7 @@ Attack.Target.List <- function(data){
 Attack.Weap.List <- function(data){
 	gathered <- data %>%
 				gather(key = num, value = type,
-					   weaptype1_txt) %>% #, weaptype2_txt, weaptype3_txt, weaptype4_txt) %>%
+					   weaptype1_txt, weaptype2_txt, weaptype3_txt, weaptype4_txt) %>%
 				group_by(type) %>%
 				summarise(time = n()) %>%
 				filter(type != '.')
@@ -159,9 +159,11 @@ Pie.Data.Filter <- function(country.iso3, year.range, selected){
 	# filter out the selected data
 	for(key in names(selected)){
 		filtered <- filtered %>%
-					filter_(paste0(key, '1_txt=="' ,selected[key], '"'))
+					filter_(paste(paste0(key, '1_txt=="' ,selected[key], '"'), '||',
+								  paste0(key, '2_txt=="' ,selected[key], '"'), '||',
+								  paste0(key, '3_txt=="' ,selected[key], '"')))
 	}
-	#write.csv(filtered, 'testing.csv')
+	write.csv(filtered, 'testing.csv')
 	return(filtered)
 }
 
