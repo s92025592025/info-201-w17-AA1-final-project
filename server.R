@@ -11,23 +11,28 @@ server <- function(input, output, clientData, session) {
   
   # This is a reactive varaible that finds a new set of pie info when input parameters are changed
   pies <- reactive({
-    Attack.Info.Pies(input$iso3, c(2015,2015), lists())
+    select <- select()
+    print(select)
+    Attack.Info.Pies(input$iso3, c(2015,2015), select)
   })
   
-  lists <- reactive({
+  select <- reactive({
     type <- input$type.select
-    print(type)
     target <- input$target.select
     weap <- input$weap.select
     select = list()
     if(type != 'ALL') select <- c(select, 'attacktype' = type)
     if(target != 'ALL') select <- c(select, 'targettype' = target)
     if(weap != 'ALL') select <- c(select, 'weaptype' = weap)
-    Attack.Info.List(input$iso3, c(2015,2015), select) 
+    select
+  })
+  
+  lists <- reactive({
+    Attack.Info.List(input$iso3, c(2015,2015), select())
   })
  
   # The three pie charts to disply attack information
-  output$type.pie <- renderPlotly(pies()[['type']])
+  output$type.pie <- renderPlotly({pies()[['type']]})
   output$target.pie <- renderPlotly(pies()[['targets']])
   output$weap.pie <- renderPlotly(pies()[['weap']])
   
@@ -46,7 +51,6 @@ server <- function(input, output, clientData, session) {
   
   observe({
     type <- input$type.select
-    print(type)
     target <- input$target.select
     weap <- input$weap.select
     select = list()
