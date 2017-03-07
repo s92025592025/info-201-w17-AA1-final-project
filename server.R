@@ -22,7 +22,7 @@ server <- function(input, output, clientData, session) {
     weap <- input$weap.select
     select = list()
     if(type != 'ALL') select <- c(select, 'attacktype' = type)
-    if(target != 'ALL') select <- c(select, 'targettype' = target)
+    if(target != 'ALL') select <- c(select, 'targtype' = target)
     if(weap != 'ALL') select <- c(select, 'weaptype' = weap)
     select
   })
@@ -47,17 +47,6 @@ server <- function(input, output, clientData, session) {
     updateSelectInput(session, 'type.select', choices = lists[['type']]) # Change the attribute choices for plot's x-axis
     updateSelectInput(session, 'target.select', choices = lists[['target']]) # Change the attribute choices for plot's y-axis
     updateSelectInput(session, 'weap.select', choices = lists[['weap']]) # Change the attribute choices for table's sorting method
-  })
-  
-  observe({
-    type <- input$type.select
-    target <- input$target.select
-    weap <- input$weap.select
-    select = list()
-    if(type != 'ALL') select <- c(select, 'attacktype' = type)
-    if(target != 'ALL') select <- c(select, 'targettype' = target)
-    if(weap != 'ALL') select <- c(select, 'weaptype' = weap)
-    Attack.Info.List(input$iso3, c(2015,2015), select) 
   })
   
 }
