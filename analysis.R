@@ -94,7 +94,49 @@ Attack.Weap.Pie <- function(data){
 # post: will return a list of information that are not duplicated in Attack type, targets and weapon
 Attack.Info.List <- function(country.iso3, year.range, selected){
 	filtered <- Pie.Data.Filter(country.iso3, year.range, selected)
-	
+
+	return(list('type' = Attack.Type.List(filtered), 'target'=Attack.Target.List(filtered),
+				'weap' = Attack.Weap.List(filtered)))
+}
+
+# pre: should give data a filtered data
+# post: will return a list of non-duplicate attack type under the data
+Attack.Type.List <- function(data){
+	gathered <- data %>%
+				gather(key = num, value = type,
+					   attacktype1_txt, attacktype2_txt, attacktype3_txt) %>%
+				group_by(type) %>%
+				summarise(time = n()) %>%
+				filter(type != '.')
+
+	return(gathered[['type']])
+}
+
+
+# pre: should give data a filtered data
+# post: will return a list of non-duplicate attack target under the data
+Attack.Target.List <- function(data){
+	gathered <- data %>%
+				gather(key = num, value = type,
+					   targtype1_txt, targtype2_txt, targtype3_txt) %>%
+				group_by(type) %>%
+				summarise(time = n()) %>%
+				filter(type != '.')
+
+	return(gathered[['type']])
+}
+
+# pre: should give data a filtered data
+# post: will return a list of non-duplicate attack weapon under the data
+Attack.Weap.List <- function(data){
+	gathered <- data %>%
+				gather(key = num, value = type,
+					   weaptype1_txt, weaptype2_txt, weaptype3_txt, weaptype4_txt) %>%
+				group_by(type) %>%
+				summarise(time = n()) %>%
+				filter(type != '.')
+
+	return(gathered[['type']])
 }
 
 # pre: should pass as ISO3(current) string(ALL CAPS) or 'WORLD' to country.iso3, a vector of a starting year
