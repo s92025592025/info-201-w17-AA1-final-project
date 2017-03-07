@@ -10,7 +10,7 @@ library(stringr)
 library(plotly)
 library(scales)
 
-DATA <- read.csv('./data/2015only.csv', stringsAsFactors = FALSE)
+DATA <- read.csv('./data/globalterrorismdb_0616dist.csv', stringsAsFactors = FALSE)
 ISO3.CONVERT <- read.csv('./data/country_data.csv', stringsAsFactors = FALSE)
 DATA.w.ISO3 <- left_join(DATA, ISO3.CONVERT)
 
