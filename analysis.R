@@ -10,7 +10,7 @@ library(stringr)
 library(plotly)
 library(scales)
 
-DATA <- read.csv('./data/globalterrorismdb_0616dist.csv', stringsAsFactors = FALSE)
+DATA <- read.csv('./data/2015only.csv', stringsAsFactors = FALSE)
 ISO3.CONVERT <- read.csv('./data/country_data.csv', stringsAsFactors = FALSE)
 DATA.w.ISO3 <- left_join(DATA, ISO3.CONVERT)
 
@@ -148,7 +148,7 @@ Attack.Weap.List <- function(data){
 Pie.Data.Filter <- function(country.iso3, year.range, selected){
 	# Filters out the data within the year.range
 	filtered <- DATA.w.ISO3 %>%
-				filter(as.numeric(iyear) >= year.range[1] && as.numeric(iyear) <= year.range[2])
+				filter(iyear >= year.range[1], iyear <= year.range[2])
 
 	# filter out the selected country if needed
 	if(country.iso3 != 'WORLD'){
@@ -161,12 +161,12 @@ Pie.Data.Filter <- function(country.iso3, year.range, selected){
 		filtered <- filtered %>%
 					filter_(paste0(key, '1_txt=="' ,selected[key], '"'))
 	}
-	write.csv(filtered, 'testing.csv')
+	#write.csv(filtered, 'testing.csv')
 	return(filtered)
 }
 
-Attack.Info.List("AFG", c(1970, 1992), list())
-
+Attack.Info.List("USA", c(2015, 2015), list('targtype'='Business'))
+Attack.Info.Pies("USA", c(2015, 2015), list('targtype'='Business'))
 
 Global.Terrorism.Attacks <- function(year) {
 	world <- map_data("world")
