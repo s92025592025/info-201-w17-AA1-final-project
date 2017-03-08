@@ -1,8 +1,15 @@
-library(shiny)
-library(ggplot2)
+
 library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(maps)
+library(stringr)
 library(plotly)
+library(scales)
+
+
 source("analysis.R")
+
 x <- c(1,2,3,4,5,6)
 y <- c(1,2,3,4,5,6)
 test <- data.frame(x,y)
@@ -39,6 +46,12 @@ server <- function(input, output, clientData, session) {
     Attack.Info.List(input$iso3, year, select)
   })
  
+  # Passes the input recieved from the ui to a function to get the plot.
+  output$graph <- renderPlotly({
+    return(Global.Terrorism.Attacks(input$slider))
+  })
+  
+  
   # The three pie charts to disply attack information
   output$type.pie <- renderPlotly({pies()[['type']]})
   output$target.pie <- renderPlotly(pies()[['targets']])
@@ -59,3 +72,4 @@ server <- function(input, output, clientData, session) {
   
 }
 shinyServer(server)
+

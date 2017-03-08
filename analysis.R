@@ -177,10 +177,10 @@ Global.Terrorism.Attacks <- function(year) {
 	                       summarize(Attacks = n()) %>% 
 	                       select(Country = country_txt, ISO3, Year = iyear, Attacks)
 
-	attacks <- filter(attack.country.year, Year == '2015') %>% select(Attacks) %>% arrange(Attacks)
+	attacks <- filter(attack.country.year, Year == year) %>% select(Attacks) %>% arrange(Attacks)
 
 	p <- attack.country.year %>%
-	  	 filter(Year == '2015') %>%  #Replace with ui.r variable
+	  	 filter(Year == year) %>%  #Replace with ui.r variable
 	  	 right_join(world, by = 'ISO3') %>% 
 	  	 ggplot() +
 	     geom_polygon(aes(x = long, y = lat, group = group, text = sprintf("Country: %s<br>Attacks: %s", Country, Attacks), fill = ifelse(is.na(Attacks), 0, Attacks))) +
