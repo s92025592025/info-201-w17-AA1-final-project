@@ -1,3 +1,4 @@
+# loads the required library
 library(dplyr)
 library(ggplot2)
 library(tidyr)
@@ -6,10 +7,14 @@ library(stringr)
 library(plotly)
 library(scales)
 
-
+# loads the file
 source("analysis.R")
+
 countries.index <- All.Country.List()
-print(countries.index)
+
+
+
+# Creates a server function 
 server <- function(input, output, clientData, session) {
   
   # This is a reactive varaible that finds a new set of pie info when input parameters are changed
@@ -19,6 +24,7 @@ server <- function(input, output, clientData, session) {
     Attack.Info.Pies(country.iso(), year, select)
   })
   
+  # It is a reactive variable that helps in selecting data for pie chart.
   select <- reactive({
     type <- input$type.select
     target <- input$target.select
@@ -30,6 +36,7 @@ server <- function(input, output, clientData, session) {
     select
   })
   
+  # It is a reactive variable that returns the range for year.
   year <- reactive({
     year <- input$year
     return(c(year))
@@ -72,8 +79,16 @@ server <- function(input, output, clientData, session) {
     updateSelectInput(session, 'weap.select', choices = lists[['weap']]) # Change the attribute choices for table's sorting method
   })
   
-  output$plot <- renderPlotly({
-    return(compare.rates(input$type, input$type.select))
+  output$plot.multiple <- renderPlotly({
+    return(compare.rates("Multiple", input$type.select))
+  })
+  
+  output$plot.success <- renderPlotly({
+    return(compare.rates("Success", input$type.select))
+  })
+  
+  output$plot.suicide <- renderPlotly({
+    return(compare.rates("Suicide", input$type.select))
   })
   
 }

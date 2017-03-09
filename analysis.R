@@ -222,20 +222,23 @@ Global.Terrorism.Attacks <- function(year.min, year.max) {
 	)
 }
 
-compare.rates <- function(data.type,attack.type){
+# It creates a function that takes the name of attack and type of attack as parameter
+# and returns a donut pie chart representing percentage of whether the type of attack and 
+# the attack hapened or not.
+compare.rates <- function(attack.type, data.type){
   
-  if(data.type == "multiple") {
+    # check whether the paased argument 
+  if(attack.type == "Multiple") {
     
     multiple.data <- select(DATA, multiple, attacktype1_txt) %>% 
       group_by(attacktype1_txt, multiple) %>% 
-     # filter_(paste0("attacktype1_txt ==", "'", attack.type, "'")) %>% 
       summarise(count = n())
     
     fail <- filter(multiple.data , multiple == 0) %>% summarise(No = count / sum(multiple.data$count) * 100)
     success <- filter(multiple.data, multiple == 1)%>% summarise(Yes = count / sum(multiple.data$count) * 100)
   }
   
-  if(data.type == "success") {
+  if(attack.type == "Success") {
     success.data <- select(DATA, success, attacktype1_txt) %>% 
       group_by(attacktype1_txt, success) %>% 
       summarise(count = n())
@@ -244,7 +247,7 @@ compare.rates <- function(data.type,attack.type){
     success <- filter(success.data, success == 1) %>% summarise(Yes = count / sum(success.data$count) * 100)
   }
   
-  if(data.type == "suicide") {
+  if(data.type == "Suicide") {
       suicide.data <- select(DATA, suicide, attacktype1_txt) %>% 
       group_by(attacktype1_txt, suicide) %>% 
       summarise(count = n())
@@ -258,13 +261,14 @@ compare.rates <- function(data.type,attack.type){
           get.percentage.data <- get.percentage.data %>% 
                                 filter_(paste0("attacktype1_txt ==", "'", attack.type, "'"))
         }
+  title.donut <- ifelse(attack.type == "ALL", paste0(data.type, " Attack"), paste0(data.type, " ", attack.type, "Attack"))
   get.percentage.data <- melt(get.percentage.data, id.vars = "attacktype1_txt")
   colnames(get.percentage.data) <- c("Type", "YesNo", "Percentage")
   p <- plot_ly(get.percentage.data, labels = ~YesNo, values = ~Percentage,
                textposition = 'inside', textinfo = 'label+percent',
                showlegend = FALSE) %>%
     add_pie(hole = 0.6) %>%
-    layout(title = "Attack Weapons",
+    layout(title = title.donut,
            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
     
