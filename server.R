@@ -10,7 +10,7 @@ library(scales)
 # loads the file
 source("analysis.R")
 
-countries.index <- All.Country.List()
+#countries.index <- All.Country.List()
 
 
 
@@ -73,7 +73,7 @@ server <- function(input, output, clientData, session) {
   })
   
   observe({ # Listen to when the to-be-included attributes are changed
-    lists <- Attack.Info.List(country.iso(), c(2015,2015), c())
+    lists <- Attack.Info.List(country.iso(), input$year, c())
     updateSelectInput(session, 'type.select', choices = lists[['type']]) # Change the attribute choices for plot's x-axis
     updateSelectInput(session, 'target.select', choices = lists[['target']]) # Change the attribute choices for plot's y-axis
     updateSelectInput(session, 'weap.select', choices = lists[['weap']]) # Change the attribute choices for table's sorting method
