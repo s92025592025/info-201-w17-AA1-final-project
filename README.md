@@ -17,7 +17,7 @@ We hope we can bring that true facts about how the terrorist attack distributes 
 
 ### Where can I find this?
 
-For normal users, you may go to (this link)[https://s92025592025.shinyapps.io/info-201-w17-aa1-final-project/] for instant access.
+For normal users, you may go to [this link](https://s92025592025.shinyapps.io/info-201-w17-aa1-final-project/) for instant access.
 
 For advanced user, clone the repository and run `app.R` in any IDE or platform which you are used to
 ```bash
@@ -30,5 +30,5 @@ The introduction tab will give a general view about the aspect we are trying to 
 
 ## Reference
 
-* (Global Terrorism Database, kaggle)[https://www.kaggle.com/START-UMD/gtd]
-* (GTD Codebook , Global Terrorism Database)[https://www.start.umd.edu/gtd/downloads/Codebook.pdf]
+* [Global Terrorism Database, kaggle](https://www.kaggle.com/START-UMD/gtd)
+* [GTD Codebook , Global Terrorism Database](https://www.start.umd.edu/gtd/downloads/Codebook.pdf)
