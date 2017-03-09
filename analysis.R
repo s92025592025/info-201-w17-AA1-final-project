@@ -167,7 +167,22 @@ Pie.Data.Filter <- function(country.iso3, year.range, selected){
 
 # pre: when need to obtain a list of countries that are on in the attack database
 # post: will return a list of countries in the format of "Name" = ISO3
-All.Country.List <- function(){}
+All.Country.List <- function(){
+	country <- ISO3.CONVERT %>%
+			   filter(ISO3 == New.ISO3)
+
+	country.name <- country[['country_txt']]
+	country.iso3 <- country[['New.ISO3']]
+
+	country.list <- list()
+
+
+	for(i in 1:length(country.name)){
+		country.list[[country.name[i]]] <- country.iso3[i]
+	}
+
+	return(country.list)
+}
 
 Global.Terrorism.Attacks <- function(year) {
 	world <- map_data("world")
