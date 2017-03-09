@@ -9,10 +9,10 @@ ui <- tagList(
   navbarPage( theme  =  shinythemes::shinytheme("united"), "Global Terrorism Database",
                   tabPanel("Summary"),
                   navbarMenu("DATA Exploration",
-                             tabPanel("Data Vidualization",
+                             tabPanel("Data Visualization",
                                       fluidPage(
                                         fluidRow(
-                                          column(width =  4, textInput('iso3', 'ISO3', value = "AFG")),
+                                          column(width =  4, selectInput("country", "country", names(All.Country.List()))),
                                           column(width = 4, sliderInput("year", "Year range:", min = 1970, max = 2015, value = c(1970,2015))),
                                           column(width = 4, selectInput("type", "Line Graph", 
                                                                         c("Multiple Attack" = "multiple",

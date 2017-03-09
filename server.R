@@ -8,16 +8,15 @@ library(scales)
 
 
 source("analysis.R")
-
-
+countries.index <- All.Country.List()
+print(countries.index)
 server <- function(input, output, clientData, session) {
   
   # This is a reactive varaible that finds a new set of pie info when input parameters are changed
   pies <- reactive({
     select <- select()
     year <- year()
-    print(year)
-    Attack.Info.Pies(input$iso3, year, select)
+    Attack.Info.Pies(country.iso(), year, select)
   })
   
   select <- reactive({
@@ -37,10 +36,17 @@ server <- function(input, output, clientData, session) {
     year
   })
   
+  country.iso <- reactive({
+    country.iso <- countries.index[input$country]
+    print(input$country)
+    print(country.iso)
+    return(country.iso)
+  })
+  
   lists <- reactive({
     select <- select()
     year <- year()
-    Attack.Info.List(input$iso3, year, select)
+    Attack.Info.List(country.iso, year, select)
   })
  
   # Passes the input recieved from the ui to a function to get the plot.
@@ -49,7 +55,6 @@ server <- function(input, output, clientData, session) {
       
   })
   
-  
   # The three pie charts to disply attack information
   output$type.pie <- renderPlotly({pies()[['type']]})
   output$target.pie <- renderPlotly(pies()[['targets']])
@@ -57,12 +62,11 @@ server <- function(input, output, clientData, session) {
   
   output$click <- renderPrint({
     d <- event_data("plotly_click")
-    print(d)
     if (is.null(d)) "Waiting for click" else d
   })
   
   observe({ # Listen to when the to-be-included attributes are changed
-    lists <- Attack.Info.List(input$iso3, c(2015,2015), c())
+    lists <- Attack.Info.List(country.iso(), c(2015,2015), c())
     updateSelectInput(session, 'type.select', choices = lists[['type']]) # Change the attribute choices for plot's x-axis
     updateSelectInput(session, 'target.select', choices = lists[['target']]) # Change the attribute choices for plot's y-axis
     updateSelectInput(session, 'weap.select', choices = lists[['weap']]) # Change the attribute choices for table's sorting method
