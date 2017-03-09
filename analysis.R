@@ -41,9 +41,10 @@ Attack.Type.Pie <- function(data){
 				summarise(time = n()) %>%
 				filter(type != '.')
 
-	return(plot_ly(gathered, labels = ~type, values = ~time, type = 'pie',
+	return(plot_ly(gathered, labels = ~type, values = ~time,
 				   textposition = 'inside', textinfo = 'label+percent',
 			       showlegend = FALSE) %>%
+				     add_pie(hole = 0.6) %>% 
 		   layout(title = "Attack Types",
 		 		  xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          		  yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
@@ -59,9 +60,10 @@ Attack.Target.Pie <- function(data){
 				summarise(time = n()) %>%
 				filter(type != '.')
 
-	return(plot_ly(gathered, labels = ~type, values = ~time, type = 'pie',
+	return(plot_ly(gathered, labels = ~type, values = ~time,
 				   textposition = 'inside', textinfo = 'label+percent',
 			       showlegend = FALSE) %>%
+				     add_pie(hole = 0.6) %>% 
 		   layout(title = "Attack Targets",
 		 		  xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          		  yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
@@ -79,9 +81,10 @@ Attack.Weap.Pie <- function(data){
 				summarise(time = n()) %>%
 				filter(type != '.')
 
-	return(plot_ly(gathered, labels = ~type, values = ~time, type = 'pie',
+	return(plot_ly(gathered, labels = ~type, values = ~time,
 				   textposition = 'inside', textinfo = 'label+percent',
 			       showlegend = FALSE) %>%
+				     add_pie(hole = 0.6) %>% 
 		   layout(title = "Attack Weapons",
 		 		  xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          		  yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
@@ -209,12 +212,13 @@ Global.Terrorism.Attacks <- function(year.min, year.max) {
   return(ggplotly(p, tooltip = "text"))
 }
 
-compare.rates <- function(data.type){
+compare.rates <- function(data.type,attack.type){
   
   if(data.type == "multiple") {
     
     multiple.data <- select(DATA, multiple, attacktype1_txt) %>% 
       group_by(attacktype1_txt, multiple) %>% 
+     # filter_(paste0("attacktype1_txt ==", "'", attack.type, "'")) %>% 
       summarise(count = n())
     
     fail <- filter(multiple.data , multiple == 0) %>% summarise(No = count / sum(multiple.data$count) * 100)
@@ -231,22 +235,28 @@ compare.rates <- function(data.type){
   }
   
   if(data.type == "suicide") {
-    suicide.data <- select(DATA, suicide, attacktype1_txt) %>% 
+      suicide.data <- select(DATA, suicide, attacktype1_txt) %>% 
       group_by(attacktype1_txt, suicide) %>% 
       summarise(count = n())
-    
+  
     fail <- filter(suicide.data , suicide == 0) %>% summarise(No = count / sum(suicide.data$count) * 100)
     success <- filter(suicide.data, suicide == 1)%>% summarise(Yes = count / sum(suicide.data$count) * 100)
   }
   
-  get.percentage.data <- left_join(fail, success, by = "attacktype1_txt") %>% 
-                          melt(id.vars = "attacktype1_txt")
-  colnames(get.percentage.data) <- c("Attack Type", "Yes/No", "Percentage")
-  p <- ggplot(data = get.percentage.data, aes(x = `Attack Type`, y = Percentage , fill = `Yes/No`))+
-    geom_bar(stat = "identity", position = "dodge")+
-    theme_light()+
-    labs(title = paste0("Percentage of various attack for ", data.type, " attack type"), x = "Type of Attack", y = "Percentage" )+
-    scale_x_discrete(labels = c("Armed Assault", "Assassination", "Explosion", "Infrastructure Attack", 
-                                "Hijacking", "Barricade Incident", "Kidnapping","Unarmed Assault", "Unknown"))
-  return(ggplotly(p))
+  get.percentage.data <- left_join(fail, success, by = "attacktype1_txt") 
+        if(attack.type != "ALL"){
+          get.percentage.data <- get.percentage.data %>% 
+                                filter_(paste0("attacktype1_txt ==", "'", attack.type, "'"))
+        }
+  get.percentage.data <- melt(get.percentage.data, id.vars = "attacktype1_txt")
+  colnames(get.percentage.data) <- c("Type", "YesNo", "Percentage")
+  p <- plot_ly(get.percentage.data, labels = ~YesNo, values = ~Percentage,
+               textposition = 'inside', textinfo = 'label+percent',
+               showlegend = FALSE) %>%
+    add_pie(hole = 0.6) %>%
+    layout(title = "Attack Weapons",
+           xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+           yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+    
+  return(p)
 }
