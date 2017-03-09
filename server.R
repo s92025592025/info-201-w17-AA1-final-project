@@ -69,6 +69,10 @@ server <- function(input, output, clientData, session) {
     updateSelectInput(session, 'weap.select', choices = lists[['weap']]) # Change the attribute choices for table's sorting method
   })
   
+  output$plot <- renderPlotly({
+    return(compare.rates(input$type))
+  })
+  
 }
 shinyServer(server)
 

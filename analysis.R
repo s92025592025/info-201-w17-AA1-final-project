@@ -9,6 +9,7 @@ library(maps)
 library(stringr)
 library(plotly)
 library(scales)
+library(reshape2)
 
 DATA <- read.csv('./data/globalterrorismdb_0616dist.csv', stringsAsFactors = FALSE)
 ISO3.CONVERT <- read.csv('./data/country_data.csv', stringsAsFactors = FALSE)
@@ -168,20 +169,23 @@ Pie.Data.Filter <- function(country.iso3, year.range, selected){
 Attack.Info.List("USA", c(2015, 2015), list('targtype'='Business'))
 Attack.Info.Pies("USA", c(2015, 2015), list('targtype'='Business'))
 
+# pre:  Insert date range in terms of years (min & max year)
+# post: The function will return a ggplotly world map illustrating the number of terrorist attacks
+#       during the selected years
 Global.Terrorism.Attacks <- function(year.min, year.max) {
   
   # Importing geographic data
   world <- map_data("world")
   world <- mutate(world, ISO3 = iso.alpha(region, 3))
   
-  # Grouping the terrorism data based on countries & years
-  attack.country.year <- DATA.w.ISO3 %>%
-    group_by(country_txt, ISO3, iyear) %>%
+  # Grouping & filtering terrorism data using the required date range
+  attacks <- DATA.w.ISO3 %>%
+    filter(iyear >= year.min & iyear <= year.max) %>% 
+    group_by(country_txt, ISO3) %>%
     summarize(Attacks = n()) %>% 
-    select(Country = country_txt, ISO3, Year = iyear, Attacks)
+    select(Country = country_txt, ISO3, Attacks) %>% 
+    arrange(Attacks)
   
-  # Filtering the terrorism data using the required date range
-  attacks <- filter(attack.country.year, Year >= year.min & Year <= year.max) %>% select(Country, ISO3, Attacks) %>% arrange(Attacks)
   
   # Plotting a world map by combining geographic and terrorism data
   p <- attacks %>%
@@ -189,7 +193,7 @@ Global.Terrorism.Attacks <- function(year.min, year.max) {
     left_join(countries, by = 'ISO3') %>%
     ggplot() +
     geom_polygon(aes(x = long, y = lat, group = group,
-                     text = sprintf("Country: %s<br>Attacks: %s", ifelse(is.na(Country), region, Country), Attacks),
+                     text = sprintf("Country: %s<br>Attacks: %s", ifelse(is.na(Country), region, Country), ifelse(is.na(Attacks), "No Data", Attacks)),
                      fill = ifelse(is.na(Attacks) & is.na(country_txt) == FALSE, 0, Attacks))) +
     scale_fill_gradientn(name = "Attacks", colors = c('green3', 'yellow', 'red'), values = rescale(attacks$Attacks)) +
     ggtitle(paste("Global Terrorism Attacks", ifelse(year.min == year.max, year.min, paste(year.min, "to", year.max)))) +
@@ -203,4 +207,46 @@ Global.Terrorism.Attacks <- function(year.min, year.max) {
   
   
   return(ggplotly(p, tooltip = "text"))
+}
+
+compare.rates <- function(data.type){
+  
+  if(data.type == "multiple") {
+    
+    multiple.data <- select(DATA, multiple, attacktype1_txt) %>% 
+      group_by(attacktype1_txt, multiple) %>% 
+      summarise(count = n())
+    
+    fail <- filter(multiple.data , multiple == 0) %>% summarise(No = count / sum(multiple.data$count) * 100)
+    success <- filter(multiple.data, multiple == 1)%>% summarise(Yes = count / sum(multiple.data$count) * 100)
+  }
+  
+  if(data.type == "success") {
+    success.data <- select(DATA, success, attacktype1_txt) %>% 
+      group_by(attacktype1_txt, success) %>% 
+      summarise(count = n())
+    
+    fail <- filter(success.data , success == 0) %>% summarise(No = count / sum(success.data$count) * 100)
+    success <- filter(success.data, success == 1) %>% summarise(Yes = count / sum(success.data$count) * 100)
+  }
+  
+  if(data.type == "suicide") {
+    suicide.data <- select(DATA, suicide, attacktype1_txt) %>% 
+      group_by(attacktype1_txt, suicide) %>% 
+      summarise(count = n())
+    
+    fail <- filter(suicide.data , suicide == 0) %>% summarise(No = count / sum(suicide.data$count) * 100)
+    success <- filter(suicide.data, suicide == 1)%>% summarise(Yes = count / sum(suicide.data$count) * 100)
+  }
+  
+  get.percentage.data <- left_join(fail, success, by = "attacktype1_txt") %>% 
+                          melt(id.vars = "attacktype1_txt")
+  colnames(get.percentage.data) <- c("Attack Type", "Yes/No", "Percentage")
+  p <- ggplot(data = get.percentage.data, aes(x = `Attack Type`, y = Percentage , fill = `Yes/No`))+
+    geom_bar(stat = "identity", position = "dodge")+
+    theme_light()+
+    labs(title = paste0("Percentage of various attack for ", data.type, " attack type"), x = "Type of Attack", y = "Percentage" )+
+    scale_x_discrete(labels = c("Armed Assault", "Assassination", "Explosion", "Infrastructure Attack", 
+                                "Hijacking", "Barricade Incident", "Kidnapping","Unarmed Assault", "Unknown"))
+  return(ggplotly(p))
 }
