@@ -1,4 +1,3 @@
-
 library(dplyr)
 library(ggplot2)
 library(tidyr)
@@ -70,7 +69,7 @@ server <- function(input, output, clientData, session) {
   })
   
   output$plot <- renderPlotly({
-    return(compare.rates(input$type))
+    return(compare.rates(input$type, input$type.select))
   })
   
 }

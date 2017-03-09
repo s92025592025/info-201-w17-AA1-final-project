@@ -11,8 +11,8 @@ library(plotly)
 library(scales)
 library(reshape2)
 
-#DATA <- read.csv('./data/trimmed.csv', stringsAsFactors = FALSE)
-DATA <- read.csv('./data/globalterrorismdb_0616dist.csv', stringsAsFactors = FALSE)
+DATA <- read.csv('./data/trimmed.csv', stringsAsFactors = FALSE)
+#DATA <- read.csv('./data/globalterrorismdb_0616dist.csv', stringsAsFactors = FALSE)
 ISO3.CONVERT <- read.csv('./data/country_data.csv', stringsAsFactors = FALSE)
 DATA.w.ISO3 <- left_join(DATA, ISO3.CONVERT)
 countries <- read.csv('./data/country_data.csv', stringsAsFactors = FALSE)
@@ -43,9 +43,10 @@ Attack.Type.Pie <- function(data){
 				summarise(time = n()) %>%
 				filter(type != '.')
 
-	return(plot_ly(gathered, labels = ~type, values = ~time, type = 'pie',
+	return(plot_ly(gathered, labels = ~type, values = ~time,
 				   textposition = 'inside', textinfo = 'label+percent',
 			       showlegend = FALSE) %>%
+				     add_pie(hole = 0.6) %>% 
 		   layout(title = "Attack Types",
 		 		  xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          		  yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
@@ -61,9 +62,10 @@ Attack.Target.Pie <- function(data){
 				summarise(time = n()) %>%
 				filter(type != '.')
 
-	return(plot_ly(gathered, labels = ~type, values = ~time, type = 'pie',
+	return(plot_ly(gathered, labels = ~type, values = ~time,
 				   textposition = 'inside', textinfo = 'label+percent',
 			       showlegend = FALSE) %>%
+				     add_pie(hole = 0.6) %>% 
 		   layout(title = "Attack Targets",
 		 		  xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          		  yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
@@ -81,9 +83,10 @@ Attack.Weap.Pie <- function(data){
 				summarise(time = n()) %>%
 				filter(type != '.')
 
-	return(plot_ly(gathered, labels = ~type, values = ~time, type = 'pie',
+	return(plot_ly(gathered, labels = ~type, values = ~time,
 				   textposition = 'inside', textinfo = 'label+percent',
 			       showlegend = FALSE) %>%
+				     add_pie(hole = 0.6) %>% 
 		   layout(title = "Attack Weapons",
 		 		  xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
          		  yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)))
@@ -187,78 +190,48 @@ All.Country.List <- function(){
 	return(country.list)
 }
 
-
-testing.map <- function(){
-	data <- DATA.w.ISO3 %>%
-			filter(iyear == 2015) %>%
-			group_by(country_txt, New.ISO3) %>%
-			summarise(times = n()) %>%
-			mutate(COUNTRY = country_txt, CODE = New.ISO3) %>%
-			select(-country_txt)
-
-		l <- list(color = toRGB("grey"), width = 0.5)
-
-# specify map projection/options
-		g <- list(
-		  showframe = FALSE,
-		  showcoastlines = FALSE,
-		  projection = list(type = 'Mercator')
-		)
-
-	return(plot_geo(data) %>%
-		   add_trace(z = ~times, color = ~times, colors = 'Blues', text = ~COUNTRY, marker = list(line = l), locations = ~CODE) %>%
-		   colorbar(title = 'GDP Billions US$', tickprefix = '$') %>%
-  layout(
-    title = '2014 Global GDP<br>Source:<a href="https://www.cia.gov/library/publications/the-world-factbook/fields/2195.html">CIA World Factbook</a>',
-    geo = g
-  ))
-}
-
 # pre:  Insert date range in terms of years (min & max year)
 # post: The function will return a ggplotly world map illustrating the number of terrorist attacks
 #       during the selected years
-Global.Terrorism.Attacks <- function(year.min, year.max) {
-  # Importing geographic data
-  world <- map_data("world")
-  world <- mutate(world, ISO3 = iso.alpha(region, 3))
-  
-  # Grouping & filtering terrorism data using the required date range
-  attacks <- DATA.w.ISO3 %>%
-    filter(iyear >= year.min & iyear <= year.max) %>% 
-    group_by(country_txt, ISO3) %>%
-    summarize(Attacks = n()) %>% 
-    select(Country = country_txt, ISO3, Attacks) %>% 
-    arrange(Attacks)
-  
-  
-  # Plotting a world map by combining geographic and terrorism data
-  p <- attacks %>%
-    right_join(world, by = 'ISO3') %>%
-    left_join(countries, by = 'ISO3') %>%
-    ggplot() +
-    geom_polygon(aes(x = long, y = lat, group = group,
-                     text = sprintf("Country: %s<br>Attacks: %s", ifelse(is.na(Country), region, Country), ifelse(is.na(Attacks), "No Data", Attacks)),
-                     fill = ifelse(is.na(Attacks) & is.na(country_txt) == FALSE, 0, Attacks))) +
-    scale_fill_gradientn(name = "Attacks", colors = c('green3', 'yellow', 'red'), values = rescale(attacks$Attacks)) +
-    ggtitle(paste("Global Terrorism Attacks", ifelse(year.min == year.max, year.min, paste(year.min, "to", year.max)))) +
-    theme(axis.title.x=element_blank(),
-          axis.text.x=element_blank(),
-          axis.ticks.x=element_blank()) +
-    theme(axis.title.y=element_blank(),
-          axis.text.y=element_blank(),
-          axis.ticks.y=element_blank()) +
-    coord_quickmap()
-  
-  
-  return(ggplotly(p, tooltip = "text"))
+Global.Terrorism.Attacks <- function(year.min, year.max) {	
+	data <-
+	  DATA.w.ISO3 %>%
+	  filter(iyear >= year.min & iyear <= year.max) %>% 
+	  group_by(country_txt, ISO3) %>%
+	  summarize(Attacks = n()) %>% 
+	  right_join(countries, by = c('country_txt' = 'country_txt')) %>%
+	  select(Country = country_txt, ISO3 = ISO3.y, Attacks) %>% 
+	  arrange(Attacks)
+	
+	
+	data$Attacks[is.na(data$Attacks)] <- 0
+	
+	
+	l <- list(color = toRGB("grey"), width = 0.5)
+	
+	g <- list(
+	  showframe = FALSE,
+	  showcoastlines = FALSE,
+	  projection = list(type = 'Mercator')
+	)
+	
+	return(plot_geo(data) %>%
+	         add_trace(z = ~Attacks, color = ~Attacks, colors = 'Reds', text = ~Country, marker = list(line = l), locations = ~ISO3) %>%
+	         colorbar(title = 'Attacks') %>%
+	         layout(
+	           title = paste(ifelse(year.min == year.max, year.min, paste(year.min, "to", year.max)),'Global Terrorism Attacks<br>Source:<a href="http://start.umd.edu/gtd/">Global Terrorism Database</a>'),
+	           geo = g
+	         )
+	)
 }
 
-compare.rates <- function(data.type){
+compare.rates <- function(data.type,attack.type){
   
   if(data.type == "multiple") {
     
     multiple.data <- select(DATA, multiple, attacktype1_txt) %>% 
       group_by(attacktype1_txt, multiple) %>% 
+     # filter_(paste0("attacktype1_txt ==", "'", attack.type, "'")) %>% 
       summarise(count = n())
     
     fail <- filter(multiple.data , multiple == 0) %>% summarise(No = count / sum(multiple.data$count) * 100)
@@ -275,22 +248,28 @@ compare.rates <- function(data.type){
   }
   
   if(data.type == "suicide") {
-    suicide.data <- select(DATA, suicide, attacktype1_txt) %>% 
+      suicide.data <- select(DATA, suicide, attacktype1_txt) %>% 
       group_by(attacktype1_txt, suicide) %>% 
       summarise(count = n())
-    
+  
     fail <- filter(suicide.data , suicide == 0) %>% summarise(No = count / sum(suicide.data$count) * 100)
     success <- filter(suicide.data, suicide == 1)%>% summarise(Yes = count / sum(suicide.data$count) * 100)
   }
   
-  get.percentage.data <- left_join(fail, success, by = "attacktype1_txt") %>% 
-                          melt(id.vars = "attacktype1_txt")
-  colnames(get.percentage.data) <- c("Attack Type", "Yes/No", "Percentage")
-  p <- ggplot(data = get.percentage.data, aes(x = `Attack Type`, y = Percentage , fill = `Yes/No`))+
-    geom_bar(stat = "identity", position = "dodge")+
-    theme_light()+
-    labs(title = paste0("Percentage of various attack for ", data.type, " attack type"), x = "Type of Attack", y = "Percentage" )+
-    scale_x_discrete(labels = c("Armed Assault", "Assassination", "Explosion", "Infrastructure Attack", 
-                                "Hijacking", "Barricade Incident", "Kidnapping","Unarmed Assault", "Unknown"))
-  return(ggplotly(p))
+  get.percentage.data <- left_join(fail, success, by = "attacktype1_txt") 
+        if(attack.type != "ALL"){
+          get.percentage.data <- get.percentage.data %>% 
+                                filter_(paste0("attacktype1_txt ==", "'", attack.type, "'"))
+        }
+  get.percentage.data <- melt(get.percentage.data, id.vars = "attacktype1_txt")
+  colnames(get.percentage.data) <- c("Type", "YesNo", "Percentage")
+  p <- plot_ly(get.percentage.data, labels = ~YesNo, values = ~Percentage,
+               textposition = 'inside', textinfo = 'label+percent',
+               showlegend = FALSE) %>%
+    add_pie(hole = 0.6) %>%
+    layout(title = "Attack Weapons",
+           xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+           yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
+    
+  return(p)
 }
