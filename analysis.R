@@ -177,17 +177,12 @@ All.Country.List <- function(){
 	country <- ISO3.CONVERT %>%
 			   filter(ISO3 == New.ISO3)
 
-	country.name <- country[['country_txt']]
-	country.iso3 <- country[['New.ISO3']]
+	countries <- c('WORLD', country[['country_txt']])
+	country.iso3 <- c('WORLD', country[['New.ISO3']])
 
-	country.list <- list()
+	names(country.iso3) <- countries
 
-
-	for(i in 1:length(country.name)){
-		country.list[[country.name[i]]] <- country.iso3[i]
-	}
-
-	return(country.list)
+	return(country.iso3)
 }
 
 # pre:  Insert date range in terms of years (min & max year)
