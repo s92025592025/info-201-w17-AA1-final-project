@@ -165,8 +165,9 @@ Pie.Data.Filter <- function(country.iso3, year.range, selected){
 	return(filtered)
 }
 
-Attack.Info.List("USA", c(2015, 2015), list('targtype'='Business'))
-Attack.Info.Pies("USA", c(2015, 2015), list('targtype'='Business'))
+# pre: when need to obtain a list of countries that are on in the attack database
+# post: will return a list of countries in the format of "Name" = ISO3
+All.Country.List <- function(){}
 
 Global.Terrorism.Attacks <- function(year) {
 	world <- map_data("world")
