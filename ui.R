@@ -20,13 +20,16 @@ ui <- tagList(
               ), # Creates a Tab
              tabPanel("Data Visualization", # Creates a Tab
                       fluidPage( # creates a fluid page layout
+                        h1("World Map"),
+                        p("The following graph illustrates the number of terrorist attacks in each country between the selected year range.  Countries with greater overall terrorism attacks are filled with darker color, whereas those with less terrorism attacks are marked with a lighter color.  "),
                         div(plotlyOutput("graph")), # craetes a division and displays a map
                         fluidRow( # Creates a fluid row with columns
                           column(width =  4, selectInput("country", "country", names(All.Country.List()))), # displays a select input box to select country
                           column(width = 4, sliderInput("year", "Year range:", min = 1970, max = 2015, value = c(1970,2015))) # displays a slider to select year range
                         ),
                         tags$hr(style="border-color: black;"), # adds a horizontal line with black colour
-                        
+                        h1("Attack Composition"),
+                        p("This section is dedicated to display the composition of attacks in the selected region.  There are 6 attributes that we are looking into.  From each attribute, users can manually select one of the fields for the other charts to display the composition of attacks solely of the selected attribute."),
                         fluidRow( # creates a fluid row layout with columns
                           column(width = 4, selectInput("type.select", 'Select Attack Type', choices = c()), # displays a drop down list to select attack type;no multiples allowed
                                  plotlyOutput("type.pie")), # displays the pie for attack type
