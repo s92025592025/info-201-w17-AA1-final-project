@@ -28,8 +28,12 @@ countries <- read.csv('./data/country_data.csv', stringsAsFactors = FALSE)
 Attack.Info.Pies <- function(country.iso3, year.range, selected){
   filtered <- Pie.Data.Filter(country.iso3, year.range, selected)
   
-  return(list(type = Attack.Type.Pie(filtered), targets = Attack.Target.Pie(filtered),
-              weap = Attack.Weap.Pie(filtered)))
+  return(list(type = Attack.Type.Pie(filtered),
+              targets = Attack.Target.Pie(filtered),
+              weap = Attack.Weap.Pie(filtered),
+              multi = compare.rates(filtered, 'multiple'),
+              suicide = compare.rates(filtered,'suicide'),
+              success = compare.rates(filtered,'success')))
 }
 
 # pre: should give data a filtered data
@@ -165,7 +169,7 @@ Pie.Data.Filter <- function(country.iso3, year.range, selected){
   # filter out the selected data
   for(key in names(selected)){
     filtered <- filtered %>%
-      filter_(paste0(key, '1_txt=="' ,selected[key], '"'))
+      filter_(paste0(key, '=="' ,selected[key], '"'))
   }
   #write.csv(filtered, 'testing.csv')
   return(filtered)
@@ -179,7 +183,6 @@ All.Country.List <- function(){
   
   countries <- c('WORLD', country[['country_txt']])
   country.iso3 <- c('WORLD', country[['New.ISO3']])
-  
   names(country.iso3) <- countries
   
   return(country.iso3)
@@ -222,72 +225,25 @@ Global.Terrorism.Attacks <- function(year.min, year.max) {
   )
 }
 
+
+
 # It creates a function that takes the name of attack and type of attack as parameter
 # and returns a donut pie chart representing percentage of whether the type of attack and 
 # the attack hapened or not.
-compare.rates <- function(attack.type, data.type){
+compare.rates <- function(filtered.data, data.type){
   
-  # checks whether the passed argument is equal to multiple type attack
-  # and if true then calculates the percentage for the occurence(yes/no) of 
-  # the attack in the two different data frames.
-  if(attack.type == "Multiple") {
-    
-    multiple.data <- select(DATA, multiple, attacktype1_txt) %>% 
-      group_by(attacktype1_txt, multiple) %>% 
-      summarise(count = n())
-    
-    fail <- filter(multiple.data , multiple == 0) %>% summarise(No = count / sum(multiple.data$count) * 100)
-    success <- filter(multiple.data, multiple == 1)%>% summarise(Yes = count / sum(multiple.data$count) * 100)
-  }
-  
-  # checks whether the passed argument is equal to success type attack
-  # and if true then calculates the percentage for the occurence(yes/no) of 
-  # the attack in two different data frame.
-  if(attack.type == "Success") {
-    success.data <- select(DATA, success, attacktype1_txt) %>% 
-      group_by(attacktype1_txt, success) %>% 
-      summarise(count = n())
-    
-    fail <- filter(success.data , success == 0) %>% summarise(No = count / sum(success.data$count) * 100)
-    success <- filter(success.data, success == 1) %>% summarise(Yes = count / sum(success.data$count) * 100)
-  }
-  
-  # checks whether the passed argument is equal to suicide type attack
-  # and if true then calculates the percentage for the occurence(yes/no) of 
-  # the attack in two different data frame.
-  if(data.type == "Suicide") {
-    suicide.data <- select(DATA, suicide, attacktype1_txt) %>% 
-      group_by(attacktype1_txt, suicide) %>% 
-      summarise(count = n())
-    
-    fail <- filter(suicide.data , suicide == 0) %>% summarise(No = count / sum(suicide.data$count) * 100)
-    success <- filter(suicide.data, suicide == 1)%>% summarise(Yes = count / sum(suicide.data$count) * 100)
-  }
-  
-  # Joins the two data frame containing occurence of the attack.
-  get.percentage.data <- left_join(fail, success, by = "attacktype1_txt") 
-  
-  # checks the attack name is not eual to ALL and if true then
-  # filters the percentange data for the name of the attack.
-  if(attack.type != "ALL"){
-    get.percentage.data <- get.percentage.data %>% 
-      filter_(paste0("attacktype1_txt ==", "'", attack.type, "'"))
-  }
-  # creates a variable containg string text for tite of the donut pie chart.
-  title.donut <- ifelse(attack.type == "ALL", paste0(data.type, " Attack"), paste0(data.type, " ", attack.type, "Attack"))
-  
-  # melts the percentage data for the occurence and percentage.
-  get.percentage.data <- melt(get.percentage.data, id.vars = "attacktype1_txt")
-  
-  # changes the column names of the percentage data table.
-  colnames(get.percentage.data) <- c("Type", "YesNo", "Percentage")
+    multiple.data <- filtered.data  %>%
+      select_(paste0("`", data.type, "`")) %>% 
+      group_by_(data.type) %>%
+      summarise(count = n()) %>%
+      mutate_(paste0('yes.or.no=ifelse(', data.type, ' == 0,"No", "Yes")'))
   
   # Creates a plotly donut pie chart with appropriate labels.
-  p <- plot_ly(get.percentage.data, labels = ~YesNo, values = ~Percentage,
+  p <- plot_ly(multiple.data, labels = ~yes.or.no, values = ~count,
                textposition = 'inside', textinfo = 'label+percent',
                showlegend = FALSE) %>%
     add_pie(hole = 0.6) %>%
-    layout(title = title.donut,
+    layout(title = 'ayyy',
            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   

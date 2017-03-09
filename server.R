@@ -9,11 +9,7 @@ library(scales)
 
 # loads the file
 source("analysis.R")
-
-#countries.index <- All.Country.List()
-
-
-
+countries.index <- All.Country.List() #The list of all the countries and thir ISO3 code
 # Creates a server function 
 server <- function(input, output, clientData, session) {
   
@@ -30,9 +26,9 @@ server <- function(input, output, clientData, session) {
     target <- input$target.select
     weap <- input$weap.select
     select = list()
-    if(type != 'ALL') select <- c(select, 'attacktype' = type)
-    if(target != 'ALL') select <- c(select, 'targtype' = target)
-    if(weap != 'ALL') select <- c(select, 'weaptype' = weap)
+    if(type != 'ALL') select <- c(select, 'attacktype1_txt' = type)
+    if(target != 'ALL') select <- c(select, 'targtype1_txt' = target)
+    if(weap != 'ALL') select <- c(select, 'weaptype1_txt' = weap)
     select
   })
   
@@ -45,8 +41,6 @@ server <- function(input, output, clientData, session) {
   
   country.iso <- reactive({
     country.iso <- countries.index[input$country]
-    print(input$country)
-    print(country.iso)
     return(country.iso)
   })
   
@@ -66,6 +60,9 @@ server <- function(input, output, clientData, session) {
   output$type.pie <- renderPlotly({pies()[['type']]})
   output$target.pie <- renderPlotly(pies()[['targets']])
   output$weap.pie <- renderPlotly(pies()[['weap']])
+  output$plot.multiple <- renderPlotly(pies()[['multi']])
+  output$plot.success <- renderPlotly(pies()[['success']])
+  output$plot.suicide <- renderPlotly(pies()[['suicide']])
   
   output$click <- renderPrint({
     d <- event_data("plotly_click")
@@ -79,17 +76,17 @@ server <- function(input, output, clientData, session) {
     updateSelectInput(session, 'weap.select', choices = lists[['weap']]) # Change the attribute choices for table's sorting method
   })
   
-  output$plot.multiple <- renderPlotly({
-    return(compare.rates("Multiple", input$type.select))
-  })
-  
-  output$plot.success <- renderPlotly({
-    return(compare.rates("Success", input$type.select))
-  })
-  
-  output$plot.suicide <- renderPlotly({
-    return(compare.rates("Suicide", input$type.select))
-  })
+  # output$plot.multiple <- renderPlotly({
+  #   return(compare.rates("Multiple", input$type.select))
+  # })
+  # 
+  # output$plot.success <- renderPlotly({
+  #   return(compare.rates("Success", input$type.select))
+  # })
+  # 
+  # output$plot.suicide <- renderPlotly({
+  #   return(compare.rates("Suicide", input$type.select))
+  # })
   
 }
 shinyServer(server)

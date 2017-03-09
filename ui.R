@@ -6,7 +6,6 @@ library(plotly)
 
 # Loads the file
 source("analysis.R")
-
 # Creats a ui containing navbar, fluid page layout.
 ui <- tagList(
   navbarPage(theme  =  shinythemes::shinytheme("united"), "Global Terrorism Database", # adds a shiny theme and a crates a navbar page
@@ -14,11 +13,10 @@ ui <- tagList(
              tabPanel("Data Visualization", # Creates a Tab
                       fluidPage( # creates a fluid page layout
                         fluidRow( # Creates a fluid row with columns
-                          column(width =  4, textInput('iso3', 'ISO3', value = "AFG")), # displays a text input box to select country
-                          column(width = 4, sliderInput("year", "Year range:", min = 1970, max = 2015, value = c(1970,2015))), # displays a slider to select year range
-                          div(plotlyOutput("graph")) # craetes a division and displays a map
+                          column(width =  4, selectInput("country", "country", names(All.Country.List()))), # displays a select input box to select country
+                          column(width = 4, sliderInput("year", "Year range:", min = 1970, max = 2015, value = c(1970,2015))) # displays a slider to select year range
                         ),
-                        
+                        div(plotlyOutput("graph")), # craetes a division and displays a map
                         tags$hr(style="border-color: black;"), # adds a horizontal line with black colour
                         
                         fluidRow( # creates a fluid row layout with columns
