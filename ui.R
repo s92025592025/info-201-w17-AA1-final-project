@@ -25,27 +25,21 @@ ui <- tagList(
                                         ),
                                         
                                         fluidRow(
-                                          column(width = 4, selectInput("type.select", 'Select Attack Type', choices = c())),
-                                          column(width = 4, selectInput("target.select",'Select Target Type', choices = c())),
-                                          column(width = 4, selectInput("weap.select", 'Select Weapon Type',choices = c()))
-                                        ),
-                                        
-                                        hr(),
-                                        
-                                        fluidRow(
                                           column(width = 8, plotlyOutput("graph")))
                                         ),
                                       
                                         hr(),
-                                      
+                                        
                                         fluidRow(
-                                          column(width = 4, plotlyOutput("type.pie")),
-                                          column(width = 4, plotlyOutput("target.pie")),
-                                          column(width = 4, plotlyOutput("weap.pie"))
+                                          column(width = 4, selectInput("type.select", 'Select Attack Type', choices = c()),
+                                                            plotlyOutput("type.pie")),
+                                          column(width = 4, selectInput("target.select",'Select Target Type', choices = c()),
+                                                            plotlyOutput("target.pie")),
+                                          column(width = 4, selectInput("weap.select", 'Select Weapon Type',choices = c()),
+                                                            plotlyOutput("weap.pie"))
                                         ),
-                                        verbatimTextOutput("click"),
-                                      hr(),
-                                          div(plotlyOutput("plot")) 
+                                        hr(),
+                                        div(plotlyOutput("plot")) 
                                       ),
                              tabPanel("Data Table"))
 ))
