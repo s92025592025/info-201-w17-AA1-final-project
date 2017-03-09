@@ -11,8 +11,8 @@ library(plotly)
 library(scales)
 library(reshape2)
 
-DATA <- read.csv('./data/trimmed.csv', stringsAsFactors = FALSE)
-#DATA <- read.csv('./data/globalterrorismdb_0616dist.csv', stringsAsFactors = FALSE)
+#DATA <- read.csv('./data/trimmed.csv', stringsAsFactors = FALSE)
+DATA <- read.csv('./data/globalterrorismdb_0616dist.csv', stringsAsFactors = FALSE)
 ISO3.CONVERT <- read.csv('./data/country_data.csv', stringsAsFactors = FALSE)
 DATA.w.ISO3 <- left_join(DATA, ISO3.CONVERT)
 countries <- read.csv('./data/country_data.csv', stringsAsFactors = FALSE)
@@ -186,6 +186,34 @@ All.Country.List <- function(){
 
 	return(country.list)
 }
+
+
+testing.map <- function(){
+	data <- DATA.w.ISO3 %>%
+			filter(iyear == 2015) %>%
+			group_by(country_txt, New.ISO3) %>%
+			summarise(times = n()) %>%
+			mutate(COUNTRY = country_txt, CODE = New.ISO3) %>%
+			select(-country_txt)
+
+		l <- list(color = toRGB("grey"), width = 0.5)
+
+# specify map projection/options
+		g <- list(
+		  showframe = FALSE,
+		  showcoastlines = FALSE,
+		  projection = list(type = 'Mercator')
+		)
+
+	return(plot_geo(data) %>%
+		   add_trace(z = ~times, color = ~times, colors = 'Blues', text = ~COUNTRY, marker = list(line = l), locations = ~CODE) %>%
+		   colorbar(title = 'GDP Billions US$', tickprefix = '$') %>%
+  layout(
+    title = '2014 Global GDP<br>Source:<a href="https://www.cia.gov/library/publications/the-world-factbook/fields/2195.html">CIA World Factbook</a>',
+    geo = g
+  ))
+}
+
 # pre:  Insert date range in terms of years (min & max year)
 # post: The function will return a ggplotly world map illustrating the number of terrorist attacks
 #       during the selected years
