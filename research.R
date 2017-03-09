@@ -100,3 +100,20 @@ motive <- DATA %>%
 
 write.csv(motive, './data/motive.csv')
 
+# kill unnecessary cols
+kill <- DATA %>%
+		select(iyear, attacktype1_txt, targtype1_txt, weaptype1_txt, country_txt, success, suicide) %>%
+		filter(iyear >= 1990)
+
+write.table(kill, file = "./data/trimmed.csv", row.name = FALSE, sep =',')
+
+# data for every five year
+
+every.five <- DATA %>%
+			  select(iyear, attacktype1_txt, targtype1_txt, weaptype1_txt, country_txt, success, suicide) %>%
+			  mutate(year.group = (iyear - 1970) / 5) %>%
+			  group_by(country_txt, year.group, success, suicide, attacktype1_txt, targtype1_txt, weaptype1_txt) %>%
+			  summarise(times = n()) %>%
+			  mutate(iyear = 1970 + year.group * 5)
+
+write.table(every.five, file = "./data/everyfive.csv", row.name = FALSE, sep =',')
