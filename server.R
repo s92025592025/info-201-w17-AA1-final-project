@@ -63,11 +63,11 @@ server <- function(input, output, clientData, session) {
     year <- year()
     Attack.Info.List(country.iso, year, select)
   })
- 
+  
   # Passes the input recieved from the ui to a function to get the plot.
   output$graph <- renderPlotly({
-      return(Global.Terrorism.Attacks(year()[1],year()[2]))
-      
+    return(Global.Terrorism.Attacks(year()[1],year()[2]))
+    
   })
   
   # The three pie charts to disply attack information

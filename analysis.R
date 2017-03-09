@@ -231,20 +231,21 @@ Global.Terrorism.Attacks <- function(year.min, year.max) {
 # the attack hapened or not.
 compare.rates <- function(filtered.data, data.type){
   
-    multiple.data <- filtered.data  %>%
-      select_(paste0("`", data.type, "`")) %>% 
-      group_by_(data.type) %>%
-      summarise(count = n()) %>%
-      mutate_(paste0('yes.or.no=ifelse(', data.type, ' == 0,"No", "Yes")'))
+  multiple.data <- filtered.data  %>%
+    select_(paste0("`", data.type, "`")) %>% 
+    group_by_(data.type) %>%
+    summarise(count = n()) %>%
+    mutate_("type" = paste0('yes.or.no=ifelse(', data.type, ' == 0,"No", "Yes")'))
   
+  validate(need(nrow(multiple.data) != 0, "No plot to display, Please choose different option."))
   # Creates a plotly donut pie chart with appropriate labels.
-  p <- plot_ly(multiple.data, labels = ~yes.or.no, values = ~count,
+  p <- plot_ly(multiple.data, labels = ~type, values = ~count,
                textposition = 'inside', textinfo = 'label+percent',
                showlegend = FALSE) %>%
     add_pie(hole = 0.6) %>%
     layout(title = paste0('Is it a "', data.type, '" attack?'),
            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
-  
   return(p)
+  
 }
