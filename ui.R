@@ -39,6 +39,5 @@ ui <- tagList(
                         ))
              )))
 
-
 # Loads the shinyUi app
 shinyUI(ui)
