@@ -27,7 +27,6 @@ countries <- read.csv('./data/country_data.csv', stringsAsFactors = FALSE)
 #		and Used Weapons
 Attack.Info.Pies <- function(country.iso3, year.range, selected){
   filtered <- Pie.Data.Filter(country.iso3, year.range, selected)
-  
   return(list(type = Attack.Type.Pie(filtered),
               targets = Attack.Target.Pie(filtered),
               weap = Attack.Weap.Pie(filtered),

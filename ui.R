@@ -6,6 +6,7 @@ library(plotly)
 
 # Loads the file
 source("analysis.R")
+bool.choices <- c('BOTH', 'YES', 'NO')
 # Creats a ui containing navbar, fluid page layout.
 ui <- tagList(
   navbarPage(theme  =  shinythemes::shinytheme("united"), "Global Terrorism Database", # adds a shiny theme and a crates a navbar page
@@ -28,12 +29,13 @@ ui <- tagList(
                                  plotlyOutput("weap.pie")) # displays a interactive plot
                         ),
                         
-                        tags$hr(style="border-color: black;"), # displays a horizontal line with black colour.
-                        
                         fluidRow( # Creates a fluid row with column layout
-                          column(width = 4,plotlyOutput("plot.multiple")), # displays a interactive plot
-                          column(width = 4,plotlyOutput("plot.success")), # displays a interactive plot
-                          column(width = 4,plotlyOutput("plot.suicide")) # displays a interactive plot 
+                          column(width = 4, selectInput("multi.select", 'Select Attack Type', choices = bool.choices),
+                                            plotlyOutput("plot.multiple")), # displays a interactive plot
+                          column(width = 4, selectInput("success.select", 'Select Attack Type', choices = bool.choices),
+                                            plotlyOutput("plot.success")), # displays a interactive plot
+                          column(width = 4, selectInput("suicide.select", 'Select Attack Type', choices = bool.choices),
+                                            plotlyOutput("plot.suicide")) # displays a interactive plot 
                         ))
              )))
 
