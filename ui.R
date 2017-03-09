@@ -6,6 +6,9 @@ library(plotly)
 source("analysis.R")
 
 ui <- tagList(
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "shiny.css")
+  ),
   navbarPage( theme  =  shinythemes::shinytheme("united"), "Global Terrorism Database",
                   tabPanel("Summary"),
                   navbarMenu("DATA Exploration",
