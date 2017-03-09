@@ -189,6 +189,8 @@ All.Country.List <- function(){
 # post: The function will return a ggplotly world map illustrating the number of terrorist attacks
 #       during the selected years
 Global.Terrorism.Attacks <- function(year.min, year.max) {	
+  
+  # Grouping & filtering terrorism data using the required date range
 	data <-
 	  DATA.w.ISO3 %>%
 	  filter(iyear >= year.min & iyear <= year.max) %>% 
@@ -199,17 +201,23 @@ Global.Terrorism.Attacks <- function(year.min, year.max) {
 	  arrange(Attacks)
 	
 	
+	# Setting NA attack values to 0 for countries
 	data$Attacks[is.na(data$Attacks)] <- 0
 	
 	
+	# Setting map boundries color
 	l <- list(color = toRGB("grey"), width = 0.5)
 	
+	
+	# Creating projection for map
 	g <- list(
 	  showframe = FALSE,
 	  showcoastlines = FALSE,
 	  projection = list(type = 'Mercator')
 	)
 	
+	
+	# returns the interactive world map based on terrorism data of each country
 	return(plot_geo(data) %>%
 	         add_trace(z = ~Attacks, color = ~Attacks, colors = 'Reds', hoverinfo = 'text',
 	         		   text = ~paste(Country, "</br>Attacked", Attacks, "Times"), 
