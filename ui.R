@@ -46,7 +46,10 @@ ui <- tagList(
                                  plotlyOutput("plot.success")), # displays the pie for wheather the attack is successful
                           column(width = 4, selectInput("suicide.select", 'Select Yes or No', choices = bool.choices),
                                  plotlyOutput("plot.suicide")) # displays the pie for wheather the attack is suicidal
-                        )
+                        ),
+                        tags$hr(style="border-color: black;"), # adds a horizontal line with black colour
+                        h1("Summary"),
+                        p("In this visualization we present, we are trying to help users identify the attacks they are most vulnerable to.  For example, in the past 5 years, all the attacks that targeted the airports in the USA are conducted via explosive and firearms.  With this information, an airport security may invest more resources in prevent attacks in those forms.")
                       )
              )
   )
