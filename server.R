@@ -1,3 +1,4 @@
+# loads the required library
 library(dplyr)
 library(ggplot2)
 library(tidyr)
@@ -6,10 +7,10 @@ library(stringr)
 library(plotly)
 library(scales)
 
-
+# loads the file
 source("analysis.R")
 
-
+# Creates a server function 
 server <- function(input, output, clientData, session) {
   
   # This is a reactive varaible that finds a new set of pie info when input parameters are changed
@@ -20,6 +21,7 @@ server <- function(input, output, clientData, session) {
     Attack.Info.Pies(input$iso3, year, select)
   })
   
+  # It is a reactive variable that helps in selecting data for pie chart.
   select <- reactive({
     type <- input$type.select
     target <- input$target.select
@@ -31,6 +33,7 @@ server <- function(input, output, clientData, session) {
     select
   })
   
+  # It is a reactive variable that returns the range for year.
   year <- reactive({
     year <- input$year
     return(c(year))

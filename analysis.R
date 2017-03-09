@@ -225,9 +225,13 @@ Global.Terrorism.Attacks <- function(year.min, year.max) {
 	)
 }
 
-compare.rates <- function(data.type,attack.type){
+# It creates a function that takes the name of attack and type of attack as parameter
+# and returns a donut pie chart representing percentage of whether the type of attack and 
+# the attack hapened or not.
+compare.rates <- function(attack.type, data.type){
   
-  if(data.type == "Multiple") {
+    # check whether the paased argument 
+  if(attack.type == "Multiple") {
     
     multiple.data <- select(DATA, multiple, attacktype1_txt) %>% 
       group_by(attacktype1_txt, multiple) %>% 
@@ -237,7 +241,7 @@ compare.rates <- function(data.type,attack.type){
     success <- filter(multiple.data, multiple == 1)%>% summarise(Yes = count / sum(multiple.data$count) * 100)
   }
   
-  if(data.type == "Success") {
+  if(attack.type == "Success") {
     success.data <- select(DATA, success, attacktype1_txt) %>% 
       group_by(attacktype1_txt, success) %>% 
       summarise(count = n())
