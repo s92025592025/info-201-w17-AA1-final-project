@@ -20,13 +20,16 @@ ui <- tagList(
               ), # Creates a Tab
              tabPanel("Data Visualization", # Creates a Tab
                       fluidPage( # creates a fluid page layout
+                        h1("World Map"),
+                        p("The following graph illustrates the number of terrorist attacks in each country between the selected year range.  Countries with greater overall terrorism attacks are filled with darker color, whereas those with less terrorism attacks are marked with a lighter color.  "),
                         div(plotlyOutput("graph")), # craetes a division and displays a map
                         fluidRow( # Creates a fluid row with columns
                           column(width =  4, selectInput("country", "country", names(All.Country.List()))), # displays a select input box to select country
                           column(width = 4, sliderInput("year", "Year range:", min = 1970, max = 2015, value = c(1970,2015))) # displays a slider to select year range
                         ),
                         tags$hr(style="border-color: black;"), # adds a horizontal line with black colour
-                        
+                        h1("Attack Composition"),
+                        p("This section is dedicated to display the composition of attacks in the selected region.  There are 6 attributes that we are looking into.  From each attribute, users can manually select one of the fields for the other charts to display the composition of attacks solely of the selected attribute."),
                         fluidRow( # creates a fluid row layout with columns
                           column(width = 4, selectInput("type.select", 'Select Attack Type', choices = c()), # displays a drop down list to select attack type;no multiples allowed
                                  plotlyOutput("type.pie")), # displays the pie for attack type
@@ -43,10 +46,7 @@ ui <- tagList(
                                  plotlyOutput("plot.success")), # displays the pie for wheather the attack is successful
                           column(width = 4, selectInput("suicide.select", 'Select Yes or No', choices = bool.choices),
                                  plotlyOutput("plot.suicide")) # displays the pie for wheather the attack is suicidal
-                        ),
-                        tags$hr(style="border-color: black;"), # adds a horizontal line with black colour
-                        h1("Summary"),
-                        p("In this visualization we present, we are trying to help users identify the attacks they are most vulnerable to.  For example, in the past 5 years, all the attacks that targeted the airports in the USA are conducted via explosive and firearms.  With this information, an airport security may invest more resources in prevent attacks in those forms.")
+                        )
                       )
              )
   )

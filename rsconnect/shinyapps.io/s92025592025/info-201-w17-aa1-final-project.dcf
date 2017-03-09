@@ -3,6 +3,12 @@ title:
 account: s92025592025
 server: shinyapps.io
 appId: 162326
+<<<<<<< HEAD
 bundleId: 740915
 url: https://s92025592025.shinyapps.io/info-201-w17-aa1-final-project/
 when: 1489101374.59488
+=======
+bundleId: 739646
+url: https://s92025592025.shinyapps.io/info-201-w17-aa1-final-project/
+when: 1489046291.48719
+>>>>>>> parent of bceb2ff... Add information on front page

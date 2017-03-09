@@ -19,12 +19,12 @@ countries <- read.csv('./data/country_data.csv', stringsAsFactors = FALSE)
 
 
 # pre: should pass as ISO3(current) string(ALL CAPS) or 'WORLD' to country.iso3, a vector of a starting year
-#	   and ending year(numbers) to year.range, and a list of filters to selected.
-#	   Format for filter: ['col.name'='attribute to filter']
-#	   Example for filter: [attacktype1_txt='Assassination', targtype1_txt='Private Citizens & Property']
+#    and ending year(numbers) to year.range, and a list of filters to selected.
+#    Format for filter: ['col.name'='attribute to filter']
+#    Example for filter: [attacktype1_txt='Assassination', targtype1_txt='Private Citizens & Property']
 #
 # post: Will return a list of plotly pie charts indicating Attacks Type, Targets,
-#		and Used Weapons
+#   and Used Weapons
 Attack.Info.Pies <- function(country.iso3, year.range, selected){
   filtered <- Pie.Data.Filter(country.iso3, year.range, selected)
   return(list(type = Attack.Type.Pie(filtered),
@@ -37,7 +37,7 @@ Attack.Info.Pies <- function(country.iso3, year.range, selected){
 
 # pre: should give data a filtered data
 # post: will return a plotly contains a pie chart showing the ratio of each kind of
-#		attack
+#   attack
 Attack.Type.Pie <- function(data){
   gathered <- data %>%
     gather(key = num, value = type,
@@ -77,7 +77,7 @@ Attack.Target.Pie <- function(data){
 
 # pre: should give data a filtered data
 # post: will return a plotly pie chart showing the ratio od each kind of Weapons used
-#		in attacks
+#   in attacks
 Attack.Weap.Pie <- function(data){
   gathered <- data %>%
     gather(key = num, value = type,
@@ -96,9 +96,9 @@ Attack.Weap.Pie <- function(data){
 }
 
 # pre: should pass as ISO3(current) string(ALL CAPS) or 'WORLD' to country.iso3, a vector of a starting year
-#	   and ending year(numbers) to year.range, and a list of filters to selected.
-#	   Format for filter: ['col.name'='attribute to filter']
-#	   Example for filter: [attacktype1_txt='Assassination', targtype1_txt='Private Citizens & Property']
+#    and ending year(numbers) to year.range, and a list of filters to selected.
+#    Format for filter: ['col.name'='attribute to filter']
+#    Example for filter: [attacktype1_txt='Assassination', targtype1_txt='Private Citizens & Property']
 #
 # post: will return a list of information that are not duplicated in Attack type, targets and weapon
 Attack.Info.List <- function(country.iso3, year.range, selected){
@@ -149,9 +149,9 @@ Attack.Weap.List <- function(data){
 }
 
 # pre: should pass as ISO3(current) string(ALL CAPS) or 'WORLD' to country.iso3, a vector of a starting year
-#	   and ending year(numbers) to year.range, and a list of filters to selected.
-#	   Format for filter: ['col.name'='attribute to filter']
-#	   Example for filter: [attacktype1_txt='Assassination', targtype1_txt='Private Citizens & Property']
+#    and ending year(numbers) to year.range, and a list of filters to selected.
+#    Format for filter: ['col.name'='attribute to filter']
+#    Example for filter: [attacktype1_txt='Assassination', targtype1_txt='Private Citizens & Property']
 #
 # post: will return a data frame that was filtered by give filter
 Pie.Data.Filter <- function(country.iso3, year.range, selected){
@@ -190,7 +190,7 @@ All.Country.List <- function(){
 # pre:  Insert date range in terms of years (min & max year)
 # post: The function will return a ggplotly world map illustrating the number of terrorist attacks
 #       during the selected years
-Global.Terrorism.Attacks <- function(year.min, year.max) {	
+Global.Terrorism.Attacks <- function(year.min, year.max) {  
   data <-
     DATA.w.ISO3 %>%
     filter(iyear >= year.min & iyear <= year.max) %>% 
@@ -237,8 +237,7 @@ compare.rates <- function(filtered.data, data.type){
     summarise(count = n()) %>%
     mutate_("type" = paste0('yes.or.no=ifelse(', data.type, ' == 0,"No", "Yes")'))
   
-  
-    validate(need(nrow(multiple.data) != 0, "No plot to display, Please choose different option."))
+  validate(need(nrow(multiple.data) != 0, "No plot to display, Please choose different option."))
   # Creates a plotly donut pie chart with appropriate labels.
   p <- plot_ly(multiple.data, labels = ~type, values = ~count,
                textposition = 'inside', textinfo = 'label+percent',
