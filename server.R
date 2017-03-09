@@ -10,10 +10,7 @@ library(scales)
 
 source("analysis.R")
 
-x <- c(1,2,3,4,5,6)
-y <- c(1,2,3,4,5,6)
-test <- data.frame(x,y)
-plot <- plot_ly(test, x=x, y=y)
+
 server <- function(input, output, clientData, session) {
   
   # This is a reactive varaible that finds a new set of pie info when input parameters are changed
@@ -37,6 +34,7 @@ server <- function(input, output, clientData, session) {
   
   year <- reactive({
     year <- input$year
+    return(c(year))
     year
   })
   
@@ -48,7 +46,8 @@ server <- function(input, output, clientData, session) {
  
   # Passes the input recieved from the ui to a function to get the plot.
   output$graph <- renderPlotly({
-    return(Global.Terrorism.Attacks(input$slider))
+      return(Global.Terrorism.Attacks(year()[1],year()[2]))
+      
   })
   
   
@@ -68,6 +67,10 @@ server <- function(input, output, clientData, session) {
     updateSelectInput(session, 'type.select', choices = lists[['type']]) # Change the attribute choices for plot's x-axis
     updateSelectInput(session, 'target.select', choices = lists[['target']]) # Change the attribute choices for plot's y-axis
     updateSelectInput(session, 'weap.select', choices = lists[['weap']]) # Change the attribute choices for table's sorting method
+  })
+  
+  output$plot <- renderPlotly({
+    return(compare.rates(input$type))
   })
   
 }
