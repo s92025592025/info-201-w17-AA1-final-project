@@ -216,7 +216,9 @@ Global.Terrorism.Attacks <- function(year.min, year.max) {
 	)
 	
 	return(plot_geo(data) %>%
-	         add_trace(z = ~Attacks, color = ~Attacks, colors = 'Reds', text = ~Country, marker = list(line = l), locations = ~ISO3) %>%
+	         add_trace(z = ~Attacks, color = ~Attacks, colors = 'Reds', hoverinfo = 'text',
+	         		   text = ~paste(Country, "</br>Attacked", Attacks, "Times"), 
+	         		   marker = list(line = l), locations = ~ISO3) %>%
 	         colorbar(title = 'Attacks') %>%
 	         layout(
 	           title = paste(ifelse(year.min == year.max, year.min, paste(year.min, "to", year.max)),'Global Terrorism Attacks<br>Source:<a href="http://start.umd.edu/gtd/">Global Terrorism Database</a>'),
