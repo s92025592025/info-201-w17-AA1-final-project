@@ -205,27 +205,15 @@ Global.Terrorism.Attacks <- function(year.min, year.max) {
 	data$Attacks[is.na(data$Attacks)] <- 0
 	
 	
-	# Setting map boundries color
-	l <- list(color = toRGB("grey"), width = 0.5)
-	
-	
-	# Creating projection for map
-	g <- list(
-	  showframe = FALSE,
-	  showcoastlines = FALSE,
-	  projection = list(type = 'Mercator')
-	)
-	
-	
 	# returns the interactive world map based on terrorism data of each country
 	return(plot_geo(data) %>%
 	         add_trace(z = ~Attacks, color = ~Attacks, colors = 'Reds', hoverinfo = 'text',
 	         		   text = ~paste(Country, "</br>Attacked", Attacks, "Times"), 
-	         		   marker = list(line = l), locations = ~ISO3) %>%
+	         		   marker = list(line = list(color = toRGB("grey"), width = 0.5)), locations = ~ISO3) %>%
 	         colorbar(title = 'Attacks') %>%
 	         layout(
 	           title = paste(ifelse(year.min == year.max, year.min, paste(year.min, "to", year.max)),'Global Terrorism Attacks<br>Source:<a href="http://start.umd.edu/gtd/">Global Terrorism Database</a>'),
-	           geo = g
+	           geo = list(showframe = FALSE, showcoastlines = FALSE, projection = list(type = 'Mercator'))
 	         )
 	)
 }
