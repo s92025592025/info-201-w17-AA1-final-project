@@ -112,14 +112,14 @@ Global.Terrorism.Attacks <- function(year.min, year.max) {
   world <- map_data("world")
 	world <- mutate(world, ISO3 = iso.alpha(region, 3))
 
-	# Grouping the terrorism data based on countries & years
-	attack.country.year <- DATA.w.ISO3 %>%
-	                       group_by(country_txt, ISO3, iyear) %>%
-	                       summarize(Attacks = n()) %>% 
-	                       select(Country = country_txt, ISO3, Year = iyear, Attacks)
+	# Grouping & filtering terrorism data using the required date range
+	attacks <- DATA.w.ISO3 %>%
+	           filter(iyear >= year.min & iyear <= year.max) %>% 
+	           group_by(country_txt, ISO3) %>%
+	           summarize(Attacks = n()) %>% 
+	           select(Country = country_txt, ISO3, Attacks) %>% 
+	           arrange(Attacks)
 
-	# Filtering the terrorism data using the required date range
-	attacks <- filter(attack.country.year, Year >= year.min & Year <= year.max) %>% select(Country, ISO3, Attacks) %>% arrange(Attacks)
 
 	# Plotting a world map by combining geographic and terrorism data
 	p <- attacks %>%
@@ -127,7 +127,7 @@ Global.Terrorism.Attacks <- function(year.min, year.max) {
 	     left_join(countries, by = 'ISO3') %>%
 	  	 ggplot() +
 	     geom_polygon(aes(x = long, y = lat, group = group,
-	                      text = sprintf("Country: %s<br>Attacks: %s", ifelse(is.na(Country), region, Country), Attacks),
+	                      text = sprintf("Country: %s<br>Attacks: %s", ifelse(is.na(Country), region, Country), ifelse(is.na(Attacks), "No Data", Attacks)),
 	                      fill = ifelse(is.na(Attacks) & is.na(country_txt) == FALSE, 0, Attacks))) +
 	     scale_fill_gradientn(name = "Attacks", colors = c('green3', 'yellow', 'red'), values = rescale(attacks$Attacks)) +
 	  	 ggtitle(paste("Global Terrorism Attacks", ifelse(year.min == year.max, year.min, paste(year.min, "to", year.max)))) +
