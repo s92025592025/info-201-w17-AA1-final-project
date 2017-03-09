@@ -10,7 +10,14 @@ bool.choices <- c('BOTH', 'YES', 'NO')
 # Creats a ui containing navbar, fluid page layout.
 ui <- tagList(
   navbarPage(theme  =  shinythemes::shinytheme("united"), "Global Terrorism Database", # adds a shiny theme and a crates a navbar page
-             tabPanel("Introduction"), # Creates a Tab
+             tabPanel("Introduction",
+                fluidPage(
+                  h1("Introduction"),
+                  p("Welcome to the Global Terrorism Dataset Exploration Tool (GTDET). Using this tool, you will be able to explore the data of more than 150,000 confirmed terrorists attacks occurred worldwide between the year 1970 to 2015. The data is taken from Global Terrorism Database which is maintained by Study of Terrorism and Responses to Terrorism (START) at the University of Maryland."),
+                  h1("Objective"),
+                  p("Terrorism is one of the biggest challenge of the 21st century which is affecting almost all countries in the world, one way or another. In order to stay safe from terrorism attacks, it is important to analyze the nature of terrorist attacks occurred around the location of concern so that security measures can be taken accordingly. This tool offers user an interactive way to explore historical terrorism data and get the useful insights from it.")
+                )
+              ), # Creates a Tab
              tabPanel("Data Visualization", # Creates a Tab
                       fluidPage( # creates a fluid page layout
                         div(plotlyOutput("graph")), # craetes a division and displays a map
