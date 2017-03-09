@@ -271,10 +271,10 @@ compare.rates <- function(attack.type, data.type){
   # filters the percentange data for the name of the attack.
   if(attack.type != "ALL"){
     get.percentage.data <- get.percentage.data %>% 
-      filter_(paste0("attacktype1_txt ==", "'", attack.type, "'"))
+      filter_(paste0("attacktype1_txt ==", "'", data.type, "'"))
   }
   # creates a variable containg string text for tite of the donut pie chart.
-  title.donut <- ifelse(attack.type == "ALL", paste0(data.type, " Attack"), paste0(data.type, " ", attack.type, "Attack"))
+  title.donut <- ifelse(data.type == "ALL", paste0(attack.type, " Attack"), paste0(attack.type, " ", data.type, "Attack"))
   
   # melts the percentage data for the occurence and percentage.
   get.percentage.data <- melt(get.percentage.data, id.vars = "attacktype1_txt")
@@ -291,5 +291,5 @@ compare.rates <- function(attack.type, data.type){
            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   
-  return(p)
+  return(get.percentage.data)
 }
