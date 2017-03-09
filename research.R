@@ -100,3 +100,9 @@ motive <- DATA %>%
 
 write.csv(motive, './data/motive.csv')
 
+# kill unnecessary cols
+kill <- DATA %>%
+		select(iyear, attacktype1_txt, targtype1_txt, weaptype1_txt, country_txt, success, suicide) %>%
+		filter(iyear >= 1990)
+
+write.table(kill, file = "./data/trimmed.csv", row.name = FALSE, sep =',')
