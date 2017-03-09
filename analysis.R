@@ -243,7 +243,7 @@ compare.rates <- function(filtered.data, data.type){
                textposition = 'inside', textinfo = 'label+percent',
                showlegend = FALSE) %>%
     add_pie(hole = 0.6) %>%
-    layout(title = 'ayyy',
+    layout(title = paste0('Is it a "', data.type, '" attack?'),
            xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
            yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE))
   
