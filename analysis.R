@@ -235,11 +235,10 @@ compare.rates <- function(filtered.data, data.type){
     select_(paste0("`", data.type, "`")) %>% 
     group_by_(data.type) %>%
     summarise(count = n()) %>%
-    mutate_("type" = paste0('yes.or.no=ifelse(', data.type, ' == 0,"No", "Yes")'))
+    mutate_("yes.or.no" = paste0('ifelse(', data.type, ' == 0,"No", "Yes")'))
   
   validate(need(nrow(multiple.data) != 0, "No plot to display, Please choose different option."))
-  # Creates a plotly donut pie chart with appropriate labels.
-  p <- plot_ly(multiple.data, labels = ~type, values = ~count,
+  p <- plot_ly(multiple.data, labels = ~yes.or.no, values = ~count,
                textposition = 'inside', textinfo = 'label+percent',
                showlegend = FALSE) %>%
     add_pie(hole = 0.6) %>%

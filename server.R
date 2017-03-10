@@ -41,8 +41,6 @@ server <- function(input, output, clientData, session) {
     if(multi != 'BOTH') select <- c(select, 'multiple' = YN.to.01(multi))
     if(success != 'BOTH') select <- c(select,'success' = YN.to.01(success))
     if(suicide != 'BOTH') select <- c(select, 'suicide' = YN.to.01(suicide))
-    print(paste('selecttttttt'))
-    print(select)
     return(select)
   })
   
